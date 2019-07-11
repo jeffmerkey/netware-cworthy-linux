@@ -42,15 +42,12 @@ load average is increasing.
 
 A sample Open CWorthy linux application called "ifcon" is included which
 resembles the Netware management console and displays linux network interface 
-statistics. nd provides a good example as to how the library is used.  
+statistics and provides a good example as to how the library is used.  
 If you let the console sit idle for 10 minutes (default), the Netware SMP
 worm screensaver will activate.  The screensaver delay can be altered by 
 calling set_screensaver_interval(int seconds);
 
-i.e.
-
-prev_seconds = set_screensaver_interval(seconds);
-
+i.e.  prev_seconds = set_screensaver_interval(seconds);
 
 TODO;
 
@@ -58,11 +55,6 @@ The portal field functions for large forms is being reworked to add
 the ability to dynamically resize the screen and map to sliding windows.
 
 BUILD
-
-You must have the ncurses-devel packages installed in order to make
-ncurses apps on your system.  you can try "yum install ncurses*" to get 
-all of the ncurses packages for RedHat and CentOS systems.  This version 
-was developed on a Red Hat 7 / CentOS 7 system. 
 
 Set the platform build value in cworthy.h.
 Only chose one option for either DOS, Linux,
@@ -96,6 +88,11 @@ nmake -f Makefile.windows
 
 Linux
 -----
+
+You must have the ncurses-devel packages installed in order to make
+ncurses apps on your linux system.  you can try "yum install ncurses*" to get 
+all of the ncurses packages for RedHat and CentOS systems.  This version 
+was developed on a Red Hat 7 / CentOS 7 system. 
 
 to make, type:
 
