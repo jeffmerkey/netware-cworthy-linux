@@ -432,6 +432,7 @@ void refresh_screen(void);
 int install_screensaver(void (*ssfunc)(void));
 int uninstall_screensaver(void (*ssfunc)(void));
 ULONG set_screensaver_interval(ULONG seconds);
+void mvputc(ULONG row, ULONG col, const chtype ch);
 #endif
 
 void copy_data(ULONG *src, ULONG *dest, ULONG len);
@@ -467,7 +468,6 @@ ULONG scroll_display(NWSCREEN *screen, ULONG row, ULONG col,
 		   ULONG cols, ULONG lines, ULONG up);
 void set_color(ULONG attr);
 void clear_color(void);
-void mvputc(ULONG row, ULONG col, const chtype ch);
 
 //
 //  menu functions

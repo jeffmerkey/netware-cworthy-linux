@@ -68,7 +68,10 @@
 #define __GNU_SOURCE
 
 #include "cworthy.h"
+
+#if (LINUX_UTIL)
 #include "netware-screensaver.h"
+#endif
 
 ULONG bar_attribute = BLUE | BGWHITE;
 ULONG field_attribute = BLUE | BGWHITE;
@@ -85,7 +88,6 @@ int ansi = 0;
 BYTE terminal_name[256];
 ULONG screensaver;
 ULONG sstime = 60 * 10; // default screensaver activates in 10 minutes
-void (*screensaverfunc)(void);
 #endif
 
 ULONG text_mode = 0;
@@ -780,12 +782,14 @@ int _kbhit(void)
 }
 #endif
 
+#if (LINUX_UTIL)
 ULONG set_screensaver_interval(ULONG seconds)
 {
    register ULONG t = sstime;
    sstime = seconds;
    return t;
 }
+#endif
 
 ULONG get_key(void)
 {
@@ -5052,8 +5056,10 @@ ULONG update_portal(ULONG num)
 
     register ULONG i, row, col, width;
 
+#if (LINUX_UTIL)
     if (screensaver)
        return -1;
+#endif
 
     if (frame[num].mask)
        return -1;
@@ -5182,8 +5188,10 @@ ULONG update_static_portal(ULONG num)
 
     register ULONG i, row, col, width;
 
+#if (LINUX_UTIL)
     if (screensaver)
        return -1;
+#endif
 
     if (frame[num].mask)
        return -1;
