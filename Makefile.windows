@@ -1,0 +1,41 @@
+#***************************************************************************
+#
+#   Copyright (c) 1997-2019 Jeffrey Vernon Merkey
+#   All Rights Reserved.
+#
+#**************************************************************************
+
+!include <win32.mak>
+
+CC = $(cc)
+LINK = $(link)
+CFLAGS = $(cdebug) $(cflags) $(cvars) /Zp1
+LFLAGS = $(linkdebug)
+
+#CFLAGS = $(cflags) $(cvars) /Zp1
+#LFLAGS =
+
+incdeps = cworthy.h
+objects = cworthy.obj 
+
+all: cworthy.lib cw.exe 
+
+cworthy.lib: $(objects)
+	lib $(objects) /out:cworthy.lib
+
+cw.exe: $(objects) cw.obj cworthy.lib
+	$(LINK) $(linkdebug) cw.obj cworthy.lib -out:cw.exe $(MAPFILE)
+
+cw.obj: cw.c $(incdeps)
+	$(CC) $(CFLAGS) cw.c
+
+clean:
+	del *.obj
+	del *.exe
+	del *.ilk
+	del *.pdb
+	del *.opt
+	del *.lib
+	del *.dll
+	del *~
+

@@ -1,0 +1,75 @@
+
+Copyright(c) Jeff V. Merkey 1997-2019.  All rights reserved.
+Open CWorthy Look Alike Terminal Library.
+
+Licensed under the GNU Public License v2.
+
+Permission to use, copy, modify, distribute, and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation.  No representations are made about the suitability of
+this software for any purpose.  It is provided "as is" without express or
+implied warranty.
+
+For those folks who liked the Novell NetWare Network Administration
+tools, this library is an open source version of the Standard Novell CWorthy
+interface.  The current library works under DOS, Windows, and Linux.
+
+This library uses the standard DOS screen color attributes which have been
+mapped to ncurses in Linux, and the Microsoft Windows Terminal API's.
+
+The DOS build of this library uses the DOS standard 0xB8000 CGA direct
+screen read/write interface.
+
+The Linux build maps to ncurses and supports most terminal types including
+Xterm, linux, and the VT100 or greater terminal types.  The interface can
+be programmed to support a wide range of terminal types at both compile and
+run time and to display the output as either simple text or special chars
+specific to the detected or specified terminal type.  Unicode and other
+special chars are fully supported for Linux, Xterm, and VT100 or greater
+terminal types.
+
+This Cworthy library includes an implementation of the NetWare SMP 
+worm screensaver.  This screen saver uses ncurses and is text based which
+is identical to the Novell Netware SMP multi processor screensaver which
+displayed a color coded worm for each processor running.  As each processor
+load increases on a particular processor, the longer the worm becomes and
+the faster it moves across the screen corresponding to that particular
+processor.  As the overall system load average across the system increases,
+the base clock rate for all the worms increases slightly to indicate 
+load average is increasing.
+
+To make the libraries:
+
+Set the platform build value in cworthy.h.
+Only chose one option for either DOS, Linux,
+or Windows NT set to the value of 1.
+
+#define LINUX_UTIL       1  <- select Linux build
+#define DOS_UTIL         0
+#define WINDOWS_NT_UTIL  0
+
+Linux
+
+make clean
+make install
+
+DOS
+
+Install the DJGPP Compiler and tools
+on DOS or Windows.  Tested on DJGPP
+gcc-4.44 version and gcc-9.0
+
+make -f Makefile.dos clean
+make -f Makefile.dos
+
+WINDOWS
+
+Install the Windows SDK from Microsoft.
+Tested on Microsoft Windows SDK
+
+nmake -f Makefile.windows clean
+nmake -f Makefile.windows
+
+

@@ -1,0 +1,42 @@
+#***************************************************************************
+#
+#   Copyright (c) 1997-2019 Jeffrey Vernon Merkey
+#   All Rights Reserved.
+#
+#**************************************************************************
+
+INCLUDES=cworthy.h
+UTILFILES=lcworthy.a cw.exe
+
+# user utility build flags
+U_CC = gcc
+U_CCP = g++
+U_CFLAGSP = -g -Os
+U_CFLAGS_LIBP = -g -c -Os
+LD = ld
+AR = ar
+
+all : utilities
+
+lcworthy.a: cworthy.o
+	$(AR) r lcworthy.a cworthy.o
+
+cworthy.o: cworthy.c $(INCLUDES)
+	$(U_CC) $(U_CFLAGS_LIBP) cworthy.c
+
+cw.o: cw.c $(INCLUDES)
+	$(U_CC) $(U_CFLAGS_LIBP) cw.c
+
+cw.exe: $(objects) cw.o lcworthy.a
+	$(CC) cw.o lcworthy.a -o cw.exe
+
+clean:
+	del *.o 
+	del lcworthy.a
+	del cw.exe
+
+utilities: $(UTILFILES)
+
+install: utilities
+
+
