@@ -40,7 +40,29 @@ processor.  As the overall system load average across the system increases,
 the base clock rate for all the worms increases slightly to indicate 
 load average is increasing.
 
-To make the libraries:
+A sample Open CWorthy linux application called "ifcon" is included which
+resembles the Netware management console and displays linux network interface 
+statistics. nd provides a good example as to how the library is used.  
+If you let the console sit idle for 10 minutes (default), the Netware SMP
+worm screensaver will activate.  The screensaver delay can be altered by 
+calling set_screensaver_interval(int seconds);
+
+i.e.
+
+prev_seconds = set_screensaver_interval(seconds);
+
+
+TODO;
+
+The portal field functions for large forms is being reworked to add 
+the ability to dynamically resize the screen and map to sliding windows.
+
+BUILD
+
+You must have the ncurses-devel packages installed in order to make
+ncurses apps on your system.  you can try "yum install ncurses*" to get 
+all of the ncurses packages for RedHat and CentOS systems.  This version 
+was developed on a Red Hat 7 / CentOS 7 system. 
 
 Set the platform build value in cworthy.h.
 Only chose one option for either DOS, Linux,
@@ -50,12 +72,9 @@ or Windows NT set to the value of 1.
 #define DOS_UTIL         0
 #define WINDOWS_NT_UTIL  0
 
-Linux
-
-make clean
-make install
 
 DOS
+---
 
 Install the DJGPP Compiler and tools
 on DOS or Windows.  Tested on DJGPP
@@ -64,7 +83,9 @@ gcc-4.44 version and gcc-9.0
 make -f Makefile.dos clean
 make -f Makefile.dos
 
+
 WINDOWS
+-------
 
 Install the Windows SDK from Microsoft.
 Tested on Microsoft Windows SDK
@@ -72,4 +93,60 @@ Tested on Microsoft Windows SDK
 nmake -f Makefile.windows clean
 nmake -f Makefile.windows
 
+
+Linux
+-----
+
+to make, type:
+
+# make -f Makefile <enter>
+
+the build process should display:
+
+g++ -g -c -O3  -fPIC -Wall cworthy.c 
+g++ -g -c -O3  -fPIC -Wall netware-screensaver.c 
+ld -shared -lc -o libcworthy.so cworthy.o netware-screensaver.o
+ar r libcworthy.a cworthy.o netware-screensaver.o
+g++ -g -O3 ifcon.c -Wall -o ifcon -lncursesw -lpthread libcworthy.a
+
+to perform a clean build:
+
+# make -f Makefile clean <enter>
+
+should display:
+
+rm -rf *.o libcworthy.so libcworthy.a ifcon
+
+
+INSTALLING/UNINSTALLING:
+
+To install:
+
+# make -f Makefile install <enter>
+
+should display:
+
+install -m 0755 ifcon /usr/bin
+install -m 0755 libcworthy.so /usr/lib
+install -m 644 libcworthy.a /usr/lib
+install -m 644 cworthy.h /usr/include
+ldconfig
+ldconfig
+
+To uninstall:
+
+# make -f Makefile uninstall <enter>
+
+should display:
+
+rm -vf /usr/bin/ifcon
+removed ‘/usr/bin/ifcon’
+rm -vf /usr/lib/libcworthy.so
+removed ‘/usr/lib/libcworthy.so’
+rm -vf /usr/lib/libcworthy.a
+removed ‘/usr/lib/libcworthy.a’
+rm -vf /usr/include/cworthy.h
+removed ‘/usr/include/cworthy.h’
+ldconfig
+ldconfig
 

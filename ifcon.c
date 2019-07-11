@@ -1718,7 +1718,7 @@ ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
 int main(int argc, char *argv[])
 {
     register int i;
-    register ULONG retCode = 0;
+    register ULONG retCode = 0, ssi;
     BYTE display_buffer[1024];
     register int plines, mlines, mlen = 0;
     struct utsname utsbuf;
@@ -1759,6 +1759,9 @@ int main(int argc, char *argv[])
 
     if (init_cworthy())
        return 0;
+
+    // set ssi in seconds
+    ssi = set_screensaver_interval(3 * 60);
 
     for (i=0; i < (get_screen_lines() - 1); i++)
     {
@@ -1877,6 +1880,7 @@ ErrorExit:;
     if (menu)
        free_menu(menu);
 
+    set_screensaver_interval(ssi);
     release_cworthy();
     return retCode;
 }

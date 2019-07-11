@@ -780,6 +780,12 @@ int _kbhit(void)
 }
 #endif
 
+ULONG set_screensaver_interval(ULONG seconds)
+{
+   register ULONG t = sstime;
+   sstime = seconds;
+   return t;
+}
 
 ULONG get_key(void)
 {

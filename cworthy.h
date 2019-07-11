@@ -431,6 +431,7 @@ int _kbhit(void);
 void refresh_screen(void);
 int install_screensaver(void (*ssfunc)(void));
 int uninstall_screensaver(void (*ssfunc)(void));
+ULONG set_screensaver_interval(ULONG seconds);
 #endif
 
 void copy_data(ULONG *src, ULONG *dest, ULONG len);
