@@ -429,7 +429,7 @@ void hard_xy(ULONG row, ULONG col)
     return;
 }
 
-void enable_cursor(void)
+void enable_cursor(int insert_mode)
 {
 #if (WINDOWS_NT_UTIL)
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -442,7 +442,7 @@ void enable_cursor(void)
 #endif
 
 #if (LINUX_UTIL)
-    curs_set(1);  // turn on the cursor
+    insert_mode ? curs_set(2) : curs_set(1);
 #endif
 
 }
@@ -683,7 +683,7 @@ ULONG release_cworthy(void)
 {
 #if (WINDOWS_NT_UTIL)
     clear_screen(&console_screen);
-    enable_cursor();
+    enable_cursor(0);
     if (console_screen.p_vidmem)
        free(console_screen.p_vidmem);
     if (console_screen.p_saved)
@@ -694,7 +694,7 @@ ULONG release_cworthy(void)
 
 #if (DOS_UTIL)
     clear_screen(&console_screen);
-    enable_cursor();
+    enable_cursor(0);
     ScreenSetCursor(screen_x, screen_y);
     screen_write(console_screen.p_saved);
     if (console_screen.p_vidmem)
@@ -706,7 +706,7 @@ ULONG release_cworthy(void)
 #if (LINUX_UTIL)
     pthread_mutex_destroy(&vidmem_mutex);
 
-    enable_cursor();
+    enable_cursor(0);
     endwin();
 
     // reset terminal escape sequence
@@ -5712,7 +5712,7 @@ ULONG input_portal_fields(ULONG num)
    }
 
    update_static_portal(num);
-   enable_cursor();
+   enable_cursor(insert);
 
    fl = frame[num].head;
    while (fl)
@@ -5919,10 +5919,13 @@ ULONG input_portal_fields(ULONG num)
             break;
 
 	 case INS:
-            if (insert)
+            if (insert) {
                insert = 0;
-            else
+	       enable_cursor(insert);
+	    } else {
                insert = 1;
+	       enable_cursor(insert);
+	    }
             break;
 
 	 case DEL:
@@ -6012,7 +6015,7 @@ ULONG input_portal_fields(ULONG num)
 	       disable_cursor();
 	       frame[fl->menu_portal].choice = fl->result;
 	       ccode = activate_menu(fl->menu_portal);
-	       enable_cursor();
+	       enable_cursor(insert);
 
 	       if (ccode == (ULONG) -1)
 		  fl->result = 0;
@@ -6159,7 +6162,7 @@ ULONG input_portal_fields(ULONG num)
 	       disable_cursor();
 	       frame[fl->menu_portal].choice = fl->result;
 	       ccode = activate_menu(fl->menu_portal);
-	       enable_cursor();
+	       enable_cursor(insert);
 
 	       if (ccode == (ULONG) -1)
 		  fl->result = 0;
@@ -6376,7 +6379,7 @@ ULONG input_portal_fields(ULONG num)
 	       disable_cursor();
 	       frame[fl->menu_portal].choice = fl->result;
 	       ccode = activate_menu(fl->menu_portal);
-	       enable_cursor();
+	       enable_cursor(insert);
 
 	       if (ccode == (ULONG) -1)
 		  fl->result = 0;

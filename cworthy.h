@@ -424,7 +424,7 @@ extern ULONG error_attribute;
 
 ULONG init_cworthy(void);
 ULONG release_cworthy(void);
-void enable_cursor(void);
+void enable_cursor(int insert_mode);
 void disable_cursor(void);
 #if (LINUX_UTIL)
 int _kbhit(void);
