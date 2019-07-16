@@ -58,6 +58,69 @@ static ULONG worm_colors[]=
    (CYAN | BGBLACK),
 };
 
+static void worm_mvputc(ULONG row, ULONG col, const chtype ch)
+{
+   if (text_mode)
+   {
+      switch (ch & 0xFF)
+      {
+         // Up Arrow
+         case 0x1E:
+            mvaddch(row, col, '*');
+            break;
+         // Down Arrow
+         case 0x1F:
+            mvaddch(row, col, '*');
+            break;
+
+         // solid block
+         case 219:
+         // dark shade block
+         case 178:
+         // medium shade block
+         case 177:
+         // light shade block
+         case 176:
+            mvaddch(row, col, ch);
+            break;
+
+         default:
+            mvaddch(row, col, ch > 127 ? ' ' : ch);
+            break;
+      }
+      return;
+   }
+
+   switch (ch & 0xFF)
+   {
+      // solid block
+      case 219:
+         mvprintw(row, col, "\u2588");
+         break;
+      // dark shade block
+      case 178:
+         mvprintw(row, col, "\u2593");
+         break;
+      // medium shade block
+      case 177:
+         mvprintw(row, col, "\u2592");
+         break;
+      // default background fill character
+      // light shade block
+      case 176:
+         mvprintw(row, col, "\u2591");
+         break;
+
+      default:
+         mvaddch(row, col, ch);
+         break;
+    }
+    return;
+}
+
+
+
+
 static void worm_put_char(int c, long row, long col, ULONG attr)
 {
     if (col >= COLS)
@@ -65,7 +128,7 @@ static void worm_put_char(int c, long row, long col, ULONG attr)
     if (row >= LINES)
        return;
     set_color(attr);
-    mvputc(row, col, c);
+    worm_mvputc(row, col, c);
     clear_color();
     return;
 }
@@ -424,7 +487,7 @@ static unsigned long run_worms(STATE *st)
     register float range, increment;
     int n;
 
-    // reset columns and lines in case the screenw was resized
+    // reset columns and lines in case the screen was resized
     st->cols = COLS;
     st->rows = LINES;
 

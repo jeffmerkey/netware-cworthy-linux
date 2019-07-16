@@ -574,6 +574,9 @@ int is_ansi_term(void);
 void set_text_mode(int mode);
 void set_mono_mode(int mode);
 void set_unicode_mode(int mode);
+extern ULONG text_mode;
+extern ULONG mono_mode;
+extern ULONG unicode_mode;
 
 #if WINDOWS_NT_UTIL
 int snprintff(char *buf, int size, const char *fmt, ...);
