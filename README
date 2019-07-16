@@ -30,6 +30,15 @@ specific to the detected or specified terminal type.  Unicode and other
 special chars are fully supported for Linux, Xterm, and VT100 or greater
 terminal types.
 
+The Linux build and Windows build both create a library file which can
+be linked from applications which use the Open Cworthy library.  The Linux
+build creates both dynamic linking shared object files (libcworthy.so)
+and statically linked ar (archive) files (libcworthy.a).  The Windows build
+creates a cworthy.lib file which CWorthy apps can link to.  See the
+Makefile.windows file for examples.  The DOS build uses the DJGPP compiler
+and tools which like Linux also creates a statically linked ar (archive)
+file (lcworthy.a).   
+
 This Cworthy library includes an implementation of the NetWare SMP 
 worm screensaver.  This screen saver uses ncurses and is text based which
 is identical to the Novell Netware SMP multi processor screensaver which
@@ -105,6 +114,13 @@ g++ -g -c -O3  -fPIC -Wall netware-screensaver.c
 ld -shared -lc -o libcworthy.so cworthy.o netware-screensaver.o
 ar r libcworthy.a cworthy.o netware-screensaver.o
 g++ -g -O3 ifcon.c -Wall -o ifcon -lncursesw -lpthread libcworthy.a
+
+alternatively, to link to the shared object library instead of statically
+linking, change the Makefile or use the following syntax for the ifcon
+build:
+
+g++ -g -O3 ifcon.c -Wall -o ifcon -lncursesw -lpthread -lcworthy
+
 
 to perform a clean build:
 
