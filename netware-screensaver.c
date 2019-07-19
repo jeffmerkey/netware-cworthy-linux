@@ -164,7 +164,7 @@ static int get_processors(void)
 
 static int get_cpu_load(STATE *st, int cpu)
 {
-    static char line[100];
+    static char line[100], *s;
     int p_usr = 0, p_nice = 0, p_sys  = 0, p_idle = 0, load = 0, len;
     FILE *f;
     char src[100] = "\0";
@@ -184,8 +184,8 @@ static int get_cpu_load(STATE *st, int cpu)
     {
         while (!feof(f) && !load)
 	{
-            fgets(line, 98, f);
-            if (!strncasecmp(src, line, len))
+            s = fgets(line, 98, f);
+            if (s && !strncasecmp(src, line, len))
 	    {
 		p_usr  = st->usr[cpu];
                 p_nice = st->nice[cpu];
@@ -230,7 +230,7 @@ static int get_cpu_load(STATE *st, int cpu)
 
 static int get_system_load(void)
 {
-    char load[100];
+    char load[100], *s;
     float l1 = 0;
     int l2 = 0;
     FILE *f;
@@ -238,12 +238,14 @@ static int get_system_load(void)
     f = fopen("/proc/loadavg", "r");
     if (f != NULL)
     {
-        fgets(load, 98, f);
-        fclose(f);
-        sscanf(load, "%f", &l1);
+        s = fgets(load, 98, f);
+        if (s) {
+           sscanf(load, "%f", &l1);
 #if VERBOSE
-        printw("Load from /proc/loadavg is %f\n", l1);
+           printw("Load from /proc/loadavg is %f\n", l1);
 #endif
+        }
+	fclose(f);
     }
     else
         l1 = 0;
