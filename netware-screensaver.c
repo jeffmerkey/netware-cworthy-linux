@@ -588,7 +588,6 @@ int cworthy_netware_screensaver(void)
 	printw(stderr, "worm %d starting at %d,%d dir %d length %d\n",
 	       s->cpu, s->x[0], s->y[0], s->direction, s->length);
 #endif
-        s->length = WORM_MIN_LEN;
     }
 
     while (!worm_kbhit())
