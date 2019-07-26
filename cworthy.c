@@ -851,7 +851,7 @@ ULONG get_key(void)
        restore_screen();
        refresh_screen();
        // if screensaver was active swallow the key
-       c = ' ';
+       c = 0;
     }
     refresh_screen();
     return c;
@@ -1624,6 +1624,44 @@ ULONG scroll_display(NWSCREEN *screen, ULONG row, ULONG col,
     return 0;
 }
 
+ULONG field_set_xy(ULONG num, ULONG row, ULONG col)
+{
+    char display_buffer[COLS + 1];
+
+    if (!frame[num].owner)
+       return -1;
+
+    if (!frame[num].screen)
+       return -1;
+
+    if (row >= (ULONG)frame[num].el_count)
+       return -1;
+
+    if (row < (ULONG)frame[num].top) {
+       frame[num].top = row;
+       frame[num].bottom = frame[num].top + frame[num].window_size;
+    } else if (row >= (frame[num].top + frame[num].window_size)) {
+       frame[num].top = row - frame[num].top;
+       frame[num].bottom = frame[num].top + frame[num].window_size;
+    }
+#if VERBOSE
+    printw("row: %d  col: %d  top: %d  bottom: %d win: %d\n", row, col,
+	   frame[num].top, frame[num].bottom, frame[num].window_size);
+#endif
+    snprintf((char *)display_buffer, sizeof(display_buffer),
+             "row: %lu  col: %lu  top: %ld  bottom: %ld "
+	     "win: %lu  x: %ld y: %ld",  row, col, frame[num].top,
+	     frame[num].bottom, frame[num].window_size,
+	     row - frame[num].top, col);
+    write_screen_comment_line(get_console_screen(),
+			      (const char *)display_buffer,
+			      BLUE | BGWHITE);
+
+    update_static_portal(num);
+    return (frame_set_xy(num, row - frame[num].top, col));
+
+}
+
 ULONG frame_set_xy(ULONG num, ULONG row, ULONG col)
 {
     if (!frame[num].owner)
@@ -1846,6 +1884,10 @@ ULONG get_resp(ULONG num)
 
        switch (key)
        {
+          // screensaver return key
+          case 0:
+             break;
+
           // repaint screen
           case ' ':
              restore_screen();
@@ -3424,6 +3466,10 @@ ULONG get_portal_resp(ULONG num)
 
        switch (key)
        {
+          // screensaver return key
+          case 0:
+             break;
+
           // repaint screen
           case ' ':
              restore_screen();
@@ -5736,7 +5782,6 @@ ULONG input_portal_fields(ULONG num)
 
    // go to first field row,col coordinates
    fl = frame[num].head;
-   frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
    if (fl->menu_items && fl->menu_strings)
    {
       write_portal(num,
@@ -5748,16 +5793,18 @@ ULONG input_portal_fields(ULONG num)
 	   (const char *)fl->buffer,
 	   fl->row, fl->col + fl->plen,	field_attribute);
 
-   update_static_portal(num);
-
-   fl = frame[num].head;
-   frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+   field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 
    for (;;)
    {
       key = get_key();
       switch (key)
       {
+          // screensaver return key
+          case 0:
+	     update_static_portal(num);
+             break;
+
 #if (LINUX_UTIL)
 	 case ESC:
 	    break;
@@ -5804,7 +5851,7 @@ ULONG input_portal_fields(ULONG num)
 	    if (fl->menu_items || fl->menu_strings)
 	       break;
 	    fl->pos = 0;
-	    frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	    field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    break;
 
 #if LINUX_UTIL
@@ -5814,7 +5861,7 @@ ULONG input_portal_fields(ULONG num)
 	    if (fl->menu_items || fl->menu_strings)
 	       break;
 	    fl->pos = strlen((const char *)fl->buffer);
-	    frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	    field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    break;
 
 	 case UP_ARROW:
@@ -5862,8 +5909,7 @@ ULONG input_portal_fields(ULONG num)
 			   field_attribute);
 
 	       fl->pos = strlen((const char *)fl->buffer);
-	       update_static_portal(num);
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    }
 	    break;
 
@@ -5909,8 +5955,7 @@ ULONG input_portal_fields(ULONG num)
 			   fl->row, fl->col + fl->plen, field_attribute);
 
 	       fl->pos = strlen((const char *)fl->buffer);
-	       update_static_portal(num);
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    }
 	    break;
 
@@ -5942,8 +5987,7 @@ ULONG input_portal_fields(ULONG num)
 		   (const char *)fl->buffer,
 		   fl->row, fl->col + fl->plen, field_attribute);
 
-            update_static_portal(num);
-	    frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	    field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    break;
 
 	 case LEFT_ARROW:
@@ -5952,9 +5996,8 @@ ULONG input_portal_fields(ULONG num)
 
 	    if (fl->pos)
 	    {
-               update_static_portal(num);
 	       fl->pos--;
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    }
 	    break;
 
@@ -5964,9 +6007,8 @@ ULONG input_portal_fields(ULONG num)
 
 	    if (fl->pos < (fl->buflen - 1))
 	    {
-               update_static_portal(num);
 	       fl->pos++;
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    }
 	    break;
 
@@ -6036,8 +6078,7 @@ ULONG input_portal_fields(ULONG num)
 		   (const char *)fl->menu_strings[fl->result],
 		   fl->row, fl->col + fl->plen, field_attribute);
 
-	       update_static_portal(num);
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	       break;
 	    }
 
@@ -6053,9 +6094,8 @@ ULONG input_portal_fields(ULONG num)
 	          write_portal_char(num, ' ', fl->row, fl->col + fl->plen +
 		       fl->pos, field_attribute);
 
-	          update_static_portal(num);
 	          fl->pos++;
-	          frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	          field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
                }
                else
                {
@@ -6075,9 +6115,8 @@ ULONG input_portal_fields(ULONG num)
 			   (const char *)fl->buffer,
 			   fl->row, fl->col + fl->plen, field_attribute);
 
-	             update_static_portal(num);
 	             fl->pos++;
-	             frame_set_xy(num, fl->row, fl->col + fl->plen +
+	             field_set_xy(num, fl->row, fl->col + fl->plen +
 				  fl->pos + 1);
                   }
                }
@@ -6113,8 +6152,7 @@ ULONG input_portal_fields(ULONG num)
 			   (const char *)fl->buffer,
 			   fl->row, fl->col + fl->plen, field_attribute);
 
-	       update_static_portal(num);
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    }
 	    break;
 
@@ -6263,8 +6301,7 @@ ULONG input_portal_fields(ULONG num)
 			   fl->row, fl->col + fl->plen, field_attribute);
 			   fl->pos = strlen((const char *)fl->buffer);
 	    }
-            update_static_portal(num);
-	    frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	    field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
             break;
 
 	 case TAB:
@@ -6307,7 +6344,7 @@ ULONG input_portal_fields(ULONG num)
 			   fl->row, fl->col + fl->plen, field_attribute);
 
 			   fl->pos = strlen((const char *)fl->buffer);
-	    frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	    field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	    break;
 
 #if (LINUX_UTIL)
@@ -6399,8 +6436,7 @@ ULONG input_portal_fields(ULONG num)
                write_portal(num,
 			   (const char *)fl->menu_strings[fl->result],
 			   fl->row, fl->col + fl->plen, field_attribute);
-               update_static_portal(num);
-	       frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 	       break;
 	    }
 
@@ -6417,9 +6453,8 @@ ULONG input_portal_fields(ULONG num)
 			 fl->row, fl->col + fl->plen + fl->pos,
 			 field_attribute);
 
-                  update_static_portal(num);
 	          fl->pos++;
-	          frame_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+	          field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
                }
                else
                {
@@ -6441,9 +6476,8 @@ ULONG input_portal_fields(ULONG num)
 			   (const char *)fl->buffer,
 			   fl->row, fl->col + fl->plen, field_attribute);
 
-	             update_static_portal(num);
 	             fl->pos++;
-	             frame_set_xy(num, fl->row, fl->col + fl->plen +
+	             field_set_xy(num, fl->row, fl->col + fl->plen +
 				  fl->pos + 1);
                   }
                }

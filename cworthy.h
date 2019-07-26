@@ -468,6 +468,7 @@ ULONG scroll_display(NWSCREEN *screen, ULONG row, ULONG col,
 		   ULONG cols, ULONG lines, ULONG up);
 void set_color(ULONG attr);
 void clear_color(void);
+ULONG frame_set_xy(ULONG num, ULONG row, ULONG col);
 
 //
 //  menu functions
