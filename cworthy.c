@@ -1647,7 +1647,6 @@ ULONG field_set_xy(ULONG num, ULONG row, ULONG col)
 #if VERBOSE
     printw("row: %d  col: %d  top: %d  bottom: %d win: %d\n", row, col,
 	   frame[num].top, frame[num].bottom, frame[num].window_size);
-#endif
     snprintf((char *)display_buffer, sizeof(display_buffer),
              "row: %lu  col: %lu  top: %ld  bottom: %ld "
 	     "win: %lu  x: %ld y: %ld",  row, col, frame[num].top,
@@ -1656,7 +1655,7 @@ ULONG field_set_xy(ULONG num, ULONG row, ULONG col)
     write_screen_comment_line(get_console_screen(),
 			      (const char *)display_buffer,
 			      BLUE | BGWHITE);
-
+#endif
     update_static_portal(num);
     return (frame_set_xy(num, row - frame[num].top, col));
 
