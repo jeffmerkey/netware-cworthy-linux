@@ -1626,7 +1626,9 @@ ULONG scroll_display(NWSCREEN *screen, ULONG row, ULONG col,
 
 ULONG field_set_xy(ULONG num, ULONG row, ULONG col)
 {
+#if VERBOSE
     char display_buffer[COLS + 1];
+#endif
 
     if (!frame[num].owner)
        return -1;
