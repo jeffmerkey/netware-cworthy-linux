@@ -1367,7 +1367,7 @@ ULONG netmenuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
              return 0;
 
           snprintf((char *)display_buffer, sizeof(display_buffer),
-                  "  F1-Help  F3-Return to Menu  SPACE-Refresh  [terminal:%s]",
+                  "  F1-Help  F3-Return to Menu  [terminal:%s]",
                   get_term_name());
           write_screen_comment_line(get_console_screen(),
 				    (const char *)display_buffer,
@@ -1390,7 +1390,7 @@ ULONG netmenuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
 
           snprintf((char *)display_buffer, sizeof(display_buffer),
 		   "  F1-Help  F3-Exit  TAB-View Stats  "
-		   "SPACE-Refresh  [terminal:%s]", get_term_name());
+		   "[terminal:%s]", get_term_name());
           write_screen_comment_line(get_console_screen(),
 				    (const char *)display_buffer,
 				    BLUE | BGWHITE);
@@ -1506,7 +1506,7 @@ ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
           mask_portal(mainportal);
 
           snprintf((char *)display_buffer, sizeof(display_buffer),
-                  "  F1-Help  F3-Return to Menu  SPACE-Refresh  [terminal:%s]",
+                  "  F1-Help  F3-Return to Menu  [terminal:%s]",
                   get_term_name());
           write_screen_comment_line(get_console_screen(),
 				    (const char *)display_buffer,
@@ -1527,7 +1527,7 @@ ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
 
           snprintf((char *)display_buffer, sizeof(display_buffer),
 		   "  F1-Help  F3-Exit  TAB-View Stats  "
-		   "SPACE-Refresh  [terminal:%s]", get_term_name());
+		   "[terminal:%s]", get_term_name());
           write_screen_comment_line(get_console_screen(),
 				    (const char *)display_buffer,
 				    BLUE | BGWHITE);
@@ -1554,7 +1554,7 @@ ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
           mask_portal(mainportal);
 
           snprintf((char *)display_buffer, sizeof(display_buffer),
-                  "  F1-Help  F3-Return to Menu  SPACE-Refresh  [terminal:%s]",
+                  "  F1-Help  F3-Return to Menu  [terminal:%s]",
                   get_term_name());
           write_screen_comment_line(get_console_screen(),
 				    (const char *)display_buffer,
@@ -1568,7 +1568,7 @@ ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
 
           snprintf((char *)display_buffer, sizeof(display_buffer),
 		   "  F1-Help  F3-Exit  TAB-View Stats  "
-		   "SPACE-Refresh  [terminal:%s]", get_term_name());
+		   "[terminal:%s]", get_term_name());
           write_screen_comment_line(get_console_screen(),
                                    (const char *)display_buffer,
 				   BLUE | BGWHITE);
@@ -1692,7 +1692,7 @@ ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
 	  {
 	     snprintf((char *)display_buffer, sizeof(display_buffer),
 		      "  F1-Help  F3-Return to Menu  "
-		      "SPACE-Refresh  [terminal:%s]", get_term_name());
+		      "[terminal:%s]", get_term_name());
 	     write_screen_comment_line(get_console_screen(),
 				       (const char *)display_buffer,
 				       BLUE | BGWHITE);
@@ -1702,7 +1702,7 @@ ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
 
              snprintf((char *)display_buffer, sizeof(display_buffer),
                       "  F1-Help  F3-Exit  TAB-Switch to Stats "
-		      " SPACE-Refresh  [terminal:%s]", get_term_name());
+		      " [terminal:%s]", get_term_name());
              write_screen_comment_line(get_console_screen(),
 				       (const char *)display_buffer,
 				       BLUE | BGWHITE);
@@ -1791,7 +1791,7 @@ int main(int argc, char *argv[])
 
     snprintf((char *)display_buffer, sizeof(display_buffer),
              "  F1-Help  F3-Exit  TAB-View Stats "
-	     " SPACE-Refresh  [terminal:%s]", get_term_name());
+	     " [terminal:%s]", get_term_name());
     write_screen_comment_line(get_console_screen(),
 			      (const char *)display_buffer,
 			      BLUE | BGWHITE);

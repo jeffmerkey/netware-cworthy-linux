@@ -87,7 +87,7 @@ int xterm = 0;
 int ansi = 0;
 BYTE terminal_name[256];
 ULONG screensaver;
-ULONG sstime = 60 * 10; // default screensaver activates in 10 minutes
+ULONG time_delay = 60 * 10; // default screensaver activates in 10 minutes
 #endif
 
 ULONG text_mode = 0;
@@ -785,8 +785,8 @@ int _kbhit(void)
 #if (LINUX_UTIL)
 ULONG set_screensaver_interval(ULONG seconds)
 {
-   register ULONG t = sstime;
-   sstime = seconds;
+   register ULONG t = time_delay;
+   time_delay = seconds;
    return t;
 }
 #endif
@@ -822,7 +822,7 @@ ULONG get_key(void)
 #if (LINUX_UTIL)
     ULONG c;
     struct timespec ts = { 0, 10000000L };
-    static ULONG sscount = 0;
+    static ULONG seconds = 0;
 
     refresh_screen();
     while (!_kbhit())
@@ -830,7 +830,7 @@ ULONG get_key(void)
        fflush(stdout);
        nanosleep(&ts, NULL);
        // convert ns to seconds
-       if ((sscount++ / 100) > sstime)
+       if ((seconds++ / 100) > time_delay)
        {
           if (screensaver == FALSE)
 	  {
@@ -840,11 +840,12 @@ ULONG get_key(void)
 	     refresh_screen();
              cworthy_netware_screensaver();
 	  }
-	  sscount = 0;
+	  seconds = 0;
        }
     }
     // read buffered key
     c = getch();
+    seconds = 0;
 
     if (screensaver == TRUE) {
        screensaver = FALSE;
@@ -1626,10 +1627,6 @@ ULONG scroll_display(NWSCREEN *screen, ULONG row, ULONG col,
 
 ULONG field_set_xy(ULONG num, ULONG row, ULONG col)
 {
-#if VERBOSE
-    char display_buffer[COLS + 1];
-#endif
-
     if (!frame[num].owner)
        return -1;
 
@@ -1643,21 +1640,9 @@ ULONG field_set_xy(ULONG num, ULONG row, ULONG col)
        frame[num].top = row;
        frame[num].bottom = frame[num].top + frame[num].window_size;
     } else if (row >= (frame[num].top + frame[num].window_size)) {
-       frame[num].top = row - frame[num].top;
+       frame[num].top = row - (frame[num].window_size - 1);
        frame[num].bottom = frame[num].top + frame[num].window_size;
     }
-#if VERBOSE
-    printw("row: %d  col: %d  top: %d  bottom: %d win: %d\n", row, col,
-	   frame[num].top, frame[num].bottom, frame[num].window_size);
-    snprintf((char *)display_buffer, sizeof(display_buffer),
-             "row: %lu  col: %lu  top: %ld  bottom: %ld "
-	     "win: %lu  x: %ld y: %ld",  row, col, frame[num].top,
-	     frame[num].bottom, frame[num].window_size,
-	     row - frame[num].top, col);
-    write_screen_comment_line(get_console_screen(),
-			      (const char *)display_buffer,
-			      BLUE | BGWHITE);
-#endif
     update_static_portal(num);
     return (frame_set_xy(num, row - frame[num].top, col));
 
@@ -1889,9 +1874,7 @@ ULONG get_resp(ULONG num)
           case 0:
              break;
 
-          // repaint screen
           case ' ':
-             restore_screen();
              break;
 
 	  case ENTER:
@@ -5663,7 +5646,7 @@ ULONG confirm_menu(const char *confirm, ULONG row, ULONG attr)
     return retCode;
 }
 
-void insert_field_node(ULONG num, FIELD_LIST *fl)
+void append_field_node(ULONG num, FIELD_LIST *fl)
 {
     if (!frame[num].head)
     {
@@ -5682,6 +5665,72 @@ void insert_field_node(ULONG num, FIELD_LIST *fl)
     return;
 }
 
+FIELD_LIST *insert_field(ULONG num, FIELD_LIST *i, FIELD_LIST *top)
+{
+    FIELD_LIST *old, *p;
+
+    if (!frame[num].tail)
+    {
+       i->next = i->prior = NULL;
+       frame[num].tail = i;
+       return i;
+    }
+    p = top;
+    old = NULL;
+    while (p)
+    {
+       if (p->row < i->row)
+       {
+	  old = p;
+	  p = p->next;
+       }
+       else if ((p->row == i->row) && (p->col < i->col))
+       {
+	  old = p;
+	  p = p->next;
+       }
+       else
+       {
+          if (p->prior)
+	  {
+	     p->prior->next = i;
+	     i->next = p;
+	     i->prior = p->prior;
+	     p->prior = i;
+	     return top;
+	  }
+	  i->next = p;
+	  i->prior = NULL;
+	  p->prior = i;
+	  return i;
+       }
+    }
+    old->next = i;
+    i->next = NULL;
+    i->prior = old;
+    frame[num].tail = i;
+    return frame[num].head;
+
+}
+
+int add_field_node(ULONG num, FIELD_LIST *new_fl)
+{
+    register FIELD_LIST *fl;
+
+    // check if the node was already added
+    // return 1 if already exists
+    fl = frame[num].head;
+    while (fl)
+    {
+       if (fl == new_fl)
+	  return 1;
+       fl = fl->next;
+    }
+    frame[num].head = insert_field(num, new_fl, frame[num].head);
+    frame[num].field_count++;
+    return 0;
+}
+
 ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
 			BYTE *prompt, ULONG plen,
 			BYTE *buffer, ULONG buflen,
@@ -5690,6 +5739,7 @@ ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
 			ULONG flags, int (*hide)(ULONG, FIELD_LIST *),
                         void *priv)
 {
+    register int ret;
     register FIELD_LIST *fl;
 
     if (!frame[num].owner)
@@ -5727,8 +5777,11 @@ ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
     fl->menu_result = menu_result;
     fl->result = menu_default;
 
-    insert_field_node(num, fl);
-
+    ret = add_field_node(num, fl);
+    if (ret) {
+       free(fl);
+       return -1;
+    }
     return 0;
 }
 
@@ -5814,11 +5867,11 @@ ULONG input_portal_fields(ULONG num)
 	    break;
 #endif
 
-	 case F1: case F2: case F4: case F5: case F6:
-	 case F7: case F8: case F9: case F11: case F12:
+	 case F1: case F2: case F4: case F6: case F7:
+	 case F8: case F9: case F10: case F11: case F12:
 	    break;
 
-	 case F10:
+	 case F5:
 	    (fl->buflen)
 	    ? (fl->buffer[fl->buflen - 1] = '\0')
 	    : (fl->buffer[0] = '\0');
@@ -5961,8 +6014,23 @@ ULONG input_portal_fields(ULONG num)
 	    break;
 
 	 case PG_UP:
+            if (frame[num].top > (int)frame[num].window_size) {
+		frame[num].top -= frame[num].window_size;
+                frame[num].bottom = frame[num].top + frame[num].window_size;
+	    } else {
+		frame[num].top = 0;
+                frame[num].bottom = frame[num].top + frame[num].window_size;
+            }
+            update_static_portal(num);
+	    break;
+
 	 case PG_DOWN:
-            break;
+	    frame[num].top += frame[num].window_size;
+            if (frame[num].top > (int)frame[num].el_limit)
+	       frame[num].top = frame[num].el_limit - 1;
+	    frame[num].bottom = frame[num].top + frame[num].window_size;
+            update_static_portal(num);
+	    break;
 
 	 case INS:
             if (insert) {
