@@ -93,6 +93,7 @@ ULONG time_delay = 60 * 10; // default screensaver activates in 10 minutes
 ULONG text_mode = 0;
 ULONG mono_mode = 0;
 ULONG unicode_mode = 0;
+ULONG insert = 0;
 NWSCREEN console_screen =
 {
    NULL,                   // VGA video address
@@ -444,7 +445,6 @@ void enable_cursor(int insert_mode)
 #if (LINUX_UTIL)
     insert_mode ? curs_set(2) : curs_set(1);
 #endif
-
 }
 
 void disable_cursor(void)
@@ -466,7 +466,6 @@ void disable_cursor(void)
 #if (LINUX_UTIL)
     curs_set(0);  // turn off the cursor
 #endif
-
 }
 
 #if (LINUX_UTIL)
@@ -5787,7 +5786,7 @@ ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
 
 ULONG input_portal_fields(ULONG num)
 {
-   register ULONG ccode, i, temp, insert = 0;
+   register ULONG ccode, i, temp, row, col;
    register ULONG key, menuRow, len, screenRow, menuCol, adj;
    register FIELD_LIST *fl, *fl_search;
    register BYTE *p;
@@ -5857,6 +5856,9 @@ ULONG input_portal_fields(ULONG num)
           // screensaver return key
           case 0:
 	     update_static_portal(num);
+	     get_xy(frame[num].screen, &row, &col);
+             enable_cursor(insert);
+	     set_xy(frame[num].screen, row, col);
              break;
 
 #if (LINUX_UTIL)
@@ -6021,6 +6023,7 @@ ULONG input_portal_fields(ULONG num)
 		frame[num].top = 0;
                 frame[num].bottom = frame[num].top + frame[num].window_size;
             }
+//	    disable_cursor();
             update_static_portal(num);
 	    break;
 
@@ -6029,6 +6032,7 @@ ULONG input_portal_fields(ULONG num)
             if (frame[num].top > (int)frame[num].el_limit)
 	       frame[num].top = frame[num].el_limit - 1;
 	    frame[num].bottom = frame[num].top + frame[num].window_size;
+//	    disable_cursor();
             update_static_portal(num);
 	    break;
 

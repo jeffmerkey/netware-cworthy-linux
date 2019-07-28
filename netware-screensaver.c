@@ -559,6 +559,9 @@ int cworthy_netware_screensaver(void)
     // initialize random number generator
     srand(time(0));
 
+    printw("cols: %d lines: %d base: %d len: %d area %d\n",
+	   COLS, LINES, AREA_BASE_LEN, AREA / AREA_DIVISOR, AREA);
+
     st->cols = COLS;
     st->rows = LINES;
 #ifdef NANOSLEEP
