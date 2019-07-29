@@ -5789,7 +5789,8 @@ ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
 
 ULONG input_portal_fields(ULONG num)
 {
-   register ULONG ccode, i, temp, row, col;
+   register ULONG ccode, i, temp;
+   ULONG row, col;
    register ULONG key, menuRow, len, screenRow, menuCol, adj;
    register FIELD_LIST *fl, *fl_search;
    register BYTE *p;
