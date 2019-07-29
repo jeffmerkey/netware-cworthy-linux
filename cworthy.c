@@ -1869,9 +1869,11 @@ ULONG get_resp(ULONG num)
 
        switch (key)
        {
+#if (LINUX_UTIL)
           // screensaver return key
           case 0:
              break;
+#endif
 
           case ' ':
              break;
@@ -3449,10 +3451,11 @@ ULONG get_portal_resp(ULONG num)
 
        switch (key)
        {
+#if (LINUX_UTIL)
           // screensaver return key
           case 0:
              break;
-
+#endif
           // repaint screen
           case ' ':
              restore_screen();
@@ -5853,6 +5856,7 @@ ULONG input_portal_fields(ULONG num)
       key = get_key();
       switch (key)
       {
+#if (LINUX_UTIL)
           // screensaver return key
           case 0:
 	     update_static_portal(num);
@@ -5860,6 +5864,7 @@ ULONG input_portal_fields(ULONG num)
              enable_cursor(insert);
 	     set_xy(frame[num].screen, row, col);
              break;
+#endif
 
 #if (LINUX_UTIL)
 	 case ESC:
@@ -6023,7 +6028,7 @@ ULONG input_portal_fields(ULONG num)
 		frame[num].top = 0;
                 frame[num].bottom = frame[num].top + frame[num].window_size;
             }
-//	    disable_cursor();
+	    disable_cursor();
             update_static_portal(num);
 	    break;
 
@@ -6032,7 +6037,7 @@ ULONG input_portal_fields(ULONG num)
             if (frame[num].top > (int)frame[num].el_limit)
 	       frame[num].top = frame[num].el_limit - 1;
 	    frame[num].bottom = frame[num].top + frame[num].window_size;
-//	    disable_cursor();
+	    disable_cursor();
             update_static_portal(num);
 	    break;
 
