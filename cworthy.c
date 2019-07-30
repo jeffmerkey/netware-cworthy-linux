@@ -6029,8 +6029,21 @@ ULONG input_portal_fields(ULONG num)
 		frame[num].top = 0;
                 frame[num].bottom = frame[num].top + frame[num].window_size;
             }
-	    disable_cursor();
-            update_static_portal(num);
+
+	    fl = frame[num].head;
+            while (fl)
+            {
+               if (!(fl->hide && fl->hide(num, fl)) &&
+		   fl->row > (ULONG)frame[num].top) {
+	          field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+		  break;
+	       }
+	       fl = fl->next;
+            }
+            if (!fl)
+	       fl = frame[num].head;
+	    if (!fl)
+	       return -1;
 	    break;
 
 	 case PG_DOWN:
@@ -6038,8 +6051,21 @@ ULONG input_portal_fields(ULONG num)
             if (frame[num].top > (int)frame[num].el_limit)
 	       frame[num].top = frame[num].el_limit - 1;
 	    frame[num].bottom = frame[num].top + frame[num].window_size;
-	    disable_cursor();
-            update_static_portal(num);
+
+	    fl = frame[num].head;
+	    while (fl)
+            {
+               if (!(fl->hide && fl->hide(num, fl)) &&
+		   fl->row > (ULONG)frame[num].top) {
+	          field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+		  break;
+	       }
+	       fl = fl->next;
+            }
+            if (!fl)
+	       fl = frame[num].head;
+	    if (!fl)
+	       return -1;
 	    break;
 
 	 case INS:
