@@ -6022,7 +6022,21 @@ ULONG input_portal_fields(ULONG num)
 	    break;
 
 	 case PG_UP:
-            if (frame[num].top > (int)frame[num].window_size) {
+	    if (fl->menu_items && fl->menu_strings)
+	    {
+               write_portal(num,
+		   (const char *)fl->menu_strings[fl->result],
+		   fl->row, fl->col + fl->plen,
+		   fl->attr);
+	    }
+	    else
+               write_portal(num,
+			   (const char *)fl->buffer,
+			   fl->row, fl->col + fl->plen,
+                           (fl->hide && fl->hide(num, fl))
+			   ? GRAY | BGBLUE : fl->attr);
+
+	    if (frame[num].top > (int)frame[num].window_size) {
 		frame[num].top -= frame[num].window_size;
                 frame[num].bottom = frame[num].top + frame[num].window_size;
 	    } else {
@@ -6034,8 +6048,19 @@ ULONG input_portal_fields(ULONG num)
             while (fl)
             {
                if (!(fl->hide && fl->hide(num, fl)) &&
-		   fl->row > (ULONG)frame[num].top) {
-	          field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+		   fl->row >= (ULONG)frame[num].top) {
+	          if (fl->menu_items && fl->menu_strings)
+	          {
+                     write_portal(num,
+			   (const char *)fl->menu_strings[fl->result],
+			   fl->row, fl->col + fl->plen, field_attribute);
+	          }
+	          else
+                     write_portal(num,
+			   (const char *)fl->buffer,
+			   fl->row, fl->col + fl->plen, field_attribute);
+
+		  field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 		  break;
 	       }
 	       fl = fl->next;
@@ -6047,6 +6072,20 @@ ULONG input_portal_fields(ULONG num)
 	    break;
 
 	 case PG_DOWN:
+	    if (fl->menu_items && fl->menu_strings)
+	    {
+               write_portal(num,
+		   (const char *)fl->menu_strings[fl->result],
+		   fl->row, fl->col + fl->plen,
+		   fl->attr);
+	    }
+	    else
+               write_portal(num,
+			   (const char *)fl->buffer,
+			   fl->row, fl->col + fl->plen,
+                           (fl->hide && fl->hide(num, fl))
+			   ? GRAY | BGBLUE : fl->attr);
+
 	    frame[num].top += frame[num].window_size;
             if (frame[num].top > (int)frame[num].el_limit)
 	       frame[num].top = frame[num].el_limit - 1;
@@ -6056,8 +6095,19 @@ ULONG input_portal_fields(ULONG num)
 	    while (fl)
             {
                if (!(fl->hide && fl->hide(num, fl)) &&
-		   fl->row > (ULONG)frame[num].top) {
-	          field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+		   fl->row >= (ULONG)frame[num].top) {
+	          if (fl->menu_items && fl->menu_strings)
+	          {
+                     write_portal(num,
+			   (const char *)fl->menu_strings[fl->result],
+			   fl->row, fl->col + fl->plen, field_attribute);
+	          }
+	          else
+                     write_portal(num,
+			   (const char *)fl->buffer,
+			   fl->row, fl->col + fl->plen, field_attribute);
+
+		  field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
 		  break;
 	       }
 	       fl = fl->next;
