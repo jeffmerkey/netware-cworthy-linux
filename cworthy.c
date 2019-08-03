@@ -5977,6 +5977,23 @@ ULONG input_portal_fields(ULONG num)
 	    break;
 
 	 case DOWN_ARROW:
+            if (fl->row > (ULONG)frame[num].bottom) {
+	       if (fl->menu_items && fl->menu_strings)
+	       {
+                  write_portal(num,
+			   (const char *)fl->menu_strings[fl->result],
+			   fl->row, fl->col + fl->plen, field_attribute);
+	       }
+	       else
+                  write_portal(num,
+			   (const char *)fl->buffer,
+			   fl->row, fl->col + fl->plen, field_attribute);
+
+	       fl->pos = strlen((const char *)fl->buffer);
+	       field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
+               break;
+	    }
+
 	    (fl->buflen)
 	    ? (fl->buffer[fl->buflen - 1] = '\0')
 	    : (fl->buffer[0] = '\0');
@@ -6074,9 +6091,9 @@ ULONG input_portal_fields(ULONG num)
                while (fl)
                {
                   if (!(fl->hide && fl->hide(num, fl)) &&
-		       (fl->row >= (ULONG)frame[num].top)) {
+		      (fl->row >= (ULONG)frame[num].top)) {
 		     break;
-                  }
+	          }
 	          fl = fl->next;
                }
 	    }
