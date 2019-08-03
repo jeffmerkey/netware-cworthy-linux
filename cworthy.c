@@ -5855,6 +5855,7 @@ ULONG input_portal_fields(ULONG num)
    for (;;)
    {
       key = get_key();
+      enable_cursor(insert);
       switch (key)
       {
 #if (LINUX_UTIL)
@@ -6036,19 +6037,21 @@ ULONG input_portal_fields(ULONG num)
                            (fl->hide && fl->hide(num, fl))
 			   ? GRAY | BGBLUE : fl->attr);
 
-	    if (frame[num].top > (int)frame[num].window_size) {
+	    if (frame[num].top > (int)(frame[num].window_size - 1)) {
 		frame[num].top -= frame[num].window_size;
                 frame[num].bottom = frame[num].top + frame[num].window_size;
 	    } else {
 		frame[num].top = 0;
                 frame[num].bottom = frame[num].top + frame[num].window_size;
             }
+            update_static_portal(num);
 
-	    fl = frame[num].head;
+            fl = frame[num].head;
             while (fl)
             {
                if (!(fl->hide && fl->hide(num, fl)) &&
-		   fl->row >= (ULONG)frame[num].top) {
+		   (fl->row >= (ULONG)frame[num].top) &&
+		   (fl->row <= (ULONG)frame[num].bottom)) {
 	          if (fl->menu_items && fl->menu_strings)
 	          {
                      write_portal(num,
@@ -6065,9 +6068,21 @@ ULONG input_portal_fields(ULONG num)
 	       }
 	       fl = fl->next;
             }
+            if (!fl) {
+	       disable_cursor();
+	       fl = frame[num].head;
+               while (fl)
+               {
+                  if (!(fl->hide && fl->hide(num, fl)) &&
+		       (fl->row >= (ULONG)frame[num].top)) {
+		     break;
+                  }
+	          fl = fl->next;
+               }
+	    }
             if (!fl)
 	       fl = frame[num].head;
-	    if (!fl)
+            if (!fl)
 	       return -1;
 	    break;
 
@@ -6087,15 +6102,18 @@ ULONG input_portal_fields(ULONG num)
 			   ? GRAY | BGBLUE : fl->attr);
 
 	    frame[num].top += frame[num].window_size;
-            if (frame[num].top > (int)frame[num].el_limit)
-	       frame[num].top = frame[num].el_limit - 1;
+            if (frame[num].top >= (int)frame[num].el_limit)
+	       frame[num].top = frame[num].el_limit
+			        ? frame[num].el_limit - 1 : 0;
 	    frame[num].bottom = frame[num].top + frame[num].window_size;
+            update_static_portal(num);
 
 	    fl = frame[num].head;
 	    while (fl)
             {
                if (!(fl->hide && fl->hide(num, fl)) &&
-		   fl->row >= (ULONG)frame[num].top) {
+		   (fl->row >= (ULONG)frame[num].top) &&
+		   (fl->row <= (ULONG)(frame[num].bottom))) {
 	          if (fl->menu_items && fl->menu_strings)
 	          {
                      write_portal(num,
@@ -6112,6 +6130,18 @@ ULONG input_portal_fields(ULONG num)
 	       }
 	       fl = fl->next;
             }
+            if (!fl) {
+	       disable_cursor();
+	       fl = frame[num].head;
+               while (fl)
+               {
+                  if (!(fl->hide && fl->hide(num, fl)) &&
+		       (fl->row >= (ULONG)frame[num].top)) {
+		     break;
+                  }
+	          fl = fl->next;
+               }
+	    }
             if (!fl)
 	       fl = frame[num].head;
 	    if (!fl)
