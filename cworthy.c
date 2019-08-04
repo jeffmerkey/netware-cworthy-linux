@@ -6118,10 +6118,13 @@ ULONG input_portal_fields(ULONG num)
                            (fl->hide && fl->hide(num, fl))
 			   ? GRAY | BGBLUE : fl->attr);
 
-	    frame[num].top += frame[num].window_size;
-            if (frame[num].top >= (int)frame[num].el_limit)
-	       frame[num].top = frame[num].el_limit
-			        ? frame[num].el_limit - 1 : 0;
+	    if (frame[num].el_limit) {
+	       if (frame[num].top >= (int)frame[num].el_limit)
+                  frame[num].top = frame[num].el_limit - 1;
+	       else if ((frame[num].top + frame[num].window_size) <
+			frame[num].el_limit)
+	          frame[num].top += frame[num].window_size;
+            }
 	    frame[num].bottom = frame[num].top + frame[num].window_size;
             update_static_portal(num);
 
