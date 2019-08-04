@@ -6119,36 +6119,42 @@ ULONG input_portal_fields(ULONG num)
 			   ? GRAY | BGBLUE : fl->attr);
 
 	    if (frame[num].el_limit) {
-	       if (frame[num].top >= (int)frame[num].el_limit)
+	       if (frame[num].top >= (int)frame[num].el_limit) {
                   frame[num].top = frame[num].el_limit - 1;
+	          frame[num].bottom = frame[num].top + frame[num].window_size;
+	       }
 	       else if ((frame[num].top + frame[num].window_size) <
-			frame[num].el_limit)
+			frame[num].el_limit) {
 	          frame[num].top += frame[num].window_size;
-            }
+	          frame[num].bottom = frame[num].top + frame[num].window_size;
+	       }
+	    }
 	    frame[num].bottom = frame[num].top + frame[num].window_size;
             update_static_portal(num);
 
-	    fl = frame[num].head;
+	    fl = frame[num].tail;
 	    while (fl)
             {
-               if (!(fl->hide && fl->hide(num, fl)) &&
-		   (fl->row >= (ULONG)frame[num].top) &&
-		   (fl->row <= (ULONG)(frame[num].bottom))) {
-	          if (fl->menu_items && fl->menu_strings)
-	          {
-                     write_portal(num,
+               if (!(fl->hide && fl->hide(num, fl))) {
+		  if ((fl->row >= (ULONG)frame[num].top) &&
+		      (fl->row <= (ULONG)(frame[num].bottom))) {
+	             if (fl->menu_items && fl->menu_strings)
+	             {
+                        write_portal(num,
 			   (const char *)fl->menu_strings[fl->result],
 			   fl->row, fl->col + fl->plen, field_attribute);
-	          }
-	          else
-                     write_portal(num,
+	             }
+	             else
+                        write_portal(num,
 			   (const char *)fl->buffer,
 			   fl->row, fl->col + fl->plen, field_attribute);
 
-		  field_set_xy(num, fl->row, fl->col + fl->plen + fl->pos + 1);
-		  break;
+		     field_set_xy(num, fl->row, fl->col + fl->plen +
+				  fl->pos + 1);
+		     break;
+                  }
 	       }
-	       fl = fl->next;
+	       fl = fl->prior;
             }
             if (!fl) {
 	       disable_cursor();
