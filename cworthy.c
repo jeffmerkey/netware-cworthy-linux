@@ -87,7 +87,9 @@ int xterm = 0;
 int ansi = 0;
 BYTE terminal_name[256];
 ULONG screensaver;
-ULONG time_delay = 60 * 10; // default screensaver activates in 10 minutes
+ULONG time_delay = 60 * 3; // default screensaver activates in 3 minutes
+ULONG refresh_pending = 0; // ncurses is not posix thread safe, set refresh
+			   // flag and call refresh from main thread only
 #endif
 
 ULONG text_mode = 0;
@@ -840,6 +842,11 @@ ULONG get_key(void)
              cworthy_netware_screensaver();
 	  }
 	  seconds = 0;
+       }
+
+       if (refresh_pending) {
+          refresh_pending = 0;
+          refresh_screen();
        }
     }
     // read buffered key
@@ -2353,7 +2360,7 @@ ULONG restore_screen(void)
     }
 #if (LINUX_UTIL)
     redrawwin(stdscr);
-    refresh_screen();
+    refresh_pending++;
 #endif
     return 0;
 
@@ -2420,7 +2427,7 @@ ULONG restore_menu(ULONG num)
        frame[num].active = 0;
     }
 #if (LINUX_UTIL)
-    refresh_screen();
+    refresh_pending++;
 #endif
     return 0;
 
@@ -5079,7 +5086,7 @@ void display_portal(ULONG num)
        }
     }
 #if (LINUX_UTIL)
-    refresh_screen();
+    refresh_pending++;
 #endif
 }
 
@@ -5209,7 +5216,7 @@ ULONG update_portal(ULONG num)
 
 #if (LINUX_UTIL)
     pthread_mutex_unlock(&frame[num].mutex);
-    refresh_screen();
+    refresh_pending++;
 #endif
     return 0;
 
@@ -5340,7 +5347,7 @@ ULONG update_static_portal(ULONG num)
 
 #if (LINUX_UTIL)
     pthread_mutex_unlock(&frame[num].mutex);
-    refresh_screen();
+    refresh_pending++;
 #endif
     return 0;
 
@@ -5446,7 +5453,7 @@ ULONG clear_portal(ULONG num)
    frame[num].bottom = frame[num].top + frame[num].window_size;
 
 #if (LINUX_UTIL)
-   refresh_screen();
+   refresh_pending++;
 #endif
    return 0;
 
