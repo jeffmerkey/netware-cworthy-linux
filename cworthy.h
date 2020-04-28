@@ -417,6 +417,7 @@ extern ULONG field_attribute;
 extern ULONG field_popup_highlight_attribute;
 extern ULONG field_popup_normal_attribute;
 extern ULONG error_attribute;
+extern CWFRAME frame[MAX_MENU];
 
 //
 //   hal functions
@@ -502,6 +503,7 @@ ULONG make_menu(NWSCREEN *screen,
 	       ULONG scroll_barPresent,
 	       ULONG maxlines);
 ULONG menu_write_string(ULONG num, BYTE *p, ULONG row, ULONG col, ULONG attr);
+ULONG get_horizontal_frame(int num);
 
 //
 //  portal functions

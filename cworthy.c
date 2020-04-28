@@ -2778,6 +2778,20 @@ ULONG activate_menu(ULONG num)
 
 }
 
+ULONG get_horizontal_frame(int num) 
+{
+   if (!frame[num].screen)
+      return 0;
+
+   if (!frame[num].owner)
+      return 0;
+
+   if (!num || num > MAX_MENU)
+      return 0;
+
+   return (ULONG)frame[num].horizontal_frame;
+}
+
 ULONG make_menu(NWSCREEN *screen,
 	       const char *header,
 	       ULONG start_row,

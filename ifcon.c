@@ -1471,7 +1471,7 @@ int build_network_menu(void)
 }
 
 #define CONFIG_NAME        "  Network Stats for Linux"
-#define COPYRIGHT_NOTICE1  "  Copyright (c) 1997-2019 Jeff V. Merkey. All Rights Reserved."
+#define COPYRIGHT_NOTICE1  "  Copyright (c) 1997-2019 Leaf Linux. All Rights Reserved."
 #define COPYRIGHT_NOTICE2  "  "
 
 ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
@@ -1761,7 +1761,7 @@ int main(int argc, char *argv[])
        return 0;
 
     // set ssi in seconds
-    ssi = set_screensaver_interval(60);
+    ssi = set_screensaver_interval(3 * 60);
 
     for (i=0; i < (get_screen_lines() - 1); i++)
     {
