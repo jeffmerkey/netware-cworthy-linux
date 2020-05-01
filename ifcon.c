@@ -1769,13 +1769,17 @@ int main(int argc, char *argv[])
 		      CYAN | BGBLUE);
     }
 
+    unsigned long header_attr = BLUE | BGCYAN;
+    if (is_xterm())
+       header_attr = BRITEWHITE | BGCYAN;
+    if (mono_mode)
+       header_attr = BLUE | BGWHITE;
+
     snprintf((char *)display_buffer, sizeof(display_buffer), CONFIG_NAME);
-    put_string_cleol(get_console_screen(), (const char *)display_buffer, NULL,
-		     0, is_xterm() ? BRITEWHITE | BGCYAN : BLUE | BGCYAN);
+    put_string_cleol(get_console_screen(), (const char *)display_buffer, NULL, 0, header_attr);
 
     snprintf((char *)display_buffer, sizeof(display_buffer), COPYRIGHT_NOTICE1);
-    put_string_cleol(get_console_screen(), (const char *)display_buffer, NULL,
-		     1, is_xterm() ? BRITEWHITE | BGCYAN : BLUE | BGCYAN);
+    put_string_cleol(get_console_screen(), (const char *)display_buffer, NULL, 1, header_attr);
 
     if (!uname(&utsbuf)) {
        snprintf((char *)display_buffer, sizeof(display_buffer),
@@ -1786,8 +1790,7 @@ int main(int argc, char *argv[])
        snprintf((char *)display_buffer, sizeof(display_buffer),
 		COPYRIGHT_NOTICE2);
     }
-    put_string_cleol(get_console_screen(), (const char *)display_buffer, NULL,
-		     2, is_xterm() ? BRITEWHITE | BGCYAN : BLUE | BGCYAN);
+    put_string_cleol(get_console_screen(), (const char *)display_buffer, NULL, 2, header_attr);
 
     snprintf((char *)display_buffer, sizeof(display_buffer),
              "  F1-Help  F3-Exit  TAB-View Stats "

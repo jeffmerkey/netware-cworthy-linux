@@ -49,7 +49,7 @@ ULONG warn_func(NWSCREEN *screen, ULONG index)
 }
 
 #define CONFIG_NAME        "  Open CWorthy Example "
-#define COPYRIGHT_NOTICE1  "  Copyright (c) 1997-2019 Jeff V. Merkey. All Rights Reserved."
+#define COPYRIGHT_NOTICE1  "  Copyright (c) 1997-2019 Leaf Linux. All Rights Reserved."
 #define COPYRIGHT_NOTICE2  "  "
 
 ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
@@ -215,17 +215,20 @@ int main(int argc, char *argv[])
        put_char_cleol(get_console_screen(), 176, i, CYAN | BGBLUE);
     }
 
+    unsigned long header_attr = BLUE | BGCYAN;
+    if (is_xterm())
+       header_attr = BRITEWHITE | BGCYAN;
+    if (mono_mode)
+       header_attr = BLUE | BGWHITE;
+
     SNPRINTF((char *)displaybuffer, sizeof(displaybuffer), CONFIG_NAME);
-    put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL,
-		     0, BLUE | BGCYAN);
+    put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL, 0, header_attr);
 
     SNPRINTF((char *)displaybuffer, sizeof(displaybuffer), COPYRIGHT_NOTICE1);
-    put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL,
-		     1, BLUE | BGCYAN);
+    put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL, 1, header_attr);
 
     SNPRINTF((char *)displaybuffer, sizeof(displaybuffer), COPYRIGHT_NOTICE2);
-    put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL,
-		     2, BLUE | BGCYAN);
+    put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL, 2, header_attr);
 
     SNPRINTF((char *)displaybuffer, sizeof(displaybuffer),
 	     "  F1-Help  ESC-Exit  TAB-View Stats  "

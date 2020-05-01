@@ -19,10 +19,10 @@ AR = ar
 all : utilities
 
 libcworthy.so: cworthy.o netware-screensaver.o
-	$(LD) -shared -lc -o libcworthy.so cworthy.o netware-screensaver.o
+	$(LD) -shared -lc -o libcworthy.so cworthy.o netware-screensaver.o 
 
 libcworthy.a: cworthy.o netware-screensaver.o
-	$(AR) r libcworthy.a cworthy.o netware-screensaver.o
+	$(AR) r libcworthy.a cworthy.o netware-screensaver.o 
 
 cworthy.o: cworthy.c $(INCLUDES)
 	$(U_CCP) $(U_CFLAGS_LIBP) -fPIC -Wall cworthy.c 
