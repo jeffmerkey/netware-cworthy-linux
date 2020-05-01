@@ -984,7 +984,7 @@ void move_string(NWSCREEN *screen,
 #endif
     }
 #if (LINUX_UTIL)
-    refresh();
+    refresh_pending++;
     pthread_mutex_unlock(&vidmem_mutex);
 #endif
 
