@@ -1772,7 +1772,7 @@ int main(int argc, char *argv[])
     unsigned long header_attr = BLUE | BGCYAN;
     if (is_xterm())
        header_attr = BRITEWHITE | BGCYAN;
-    if (mono_mode)
+    if (mono_mode || !has_color)
        header_attr = BLUE | BGWHITE;
 
     snprintf((char *)display_buffer, sizeof(display_buffer), CONFIG_NAME);
