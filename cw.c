@@ -216,11 +216,12 @@ int main(int argc, char *argv[])
     }
 
     unsigned long header_attr = BLUE | BGCYAN;
+#if LINUX_UTIL
     if (is_xterm())
        header_attr = BRITEWHITE | BGCYAN;
     if (mono_mode)
        header_attr = BLUE | BGWHITE;
-
+#endif
     SNPRINTF((char *)displaybuffer, sizeof(displaybuffer), CONFIG_NAME);
     put_string_cleol(get_console_screen(), (const char *)displaybuffer, NULL, 0, header_attr);
 

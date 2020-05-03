@@ -580,6 +580,7 @@ void set_unicode_mode(int mode);
 extern ULONG text_mode;
 extern ULONG mono_mode;
 extern ULONG unicode_mode;
+extern int has_color;
 
 #if WINDOWS_NT_UTIL
 int snprintff(char *buf, int size, const char *fmt, ...);
