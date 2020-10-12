@@ -43,16 +43,16 @@ utilities: $(UTILFILES)
 
 install: utilities
 	install -m 0755 ifcon /usr/bin
-	install -m 0755 libcworthy.so /usr/lib64
-	install -m 644 libcworthy.a /usr/lib64
+	install -m 0755 libcworthy.so /usr/lib
+	install -m 644 libcworthy.a /usr/lib
 	install -m 644 cworthy.h /usr/include
 	ldconfig
 	ldconfig
 
 uninstall: 
 	rm -vf /usr/bin/ifcon
-	rm -vf /usr/lib64/libcworthy.so
-	rm -vf /usr/lib64/libcworthy.a
+	rm -vf /usr/lib/libcworthy.so
+	rm -vf /usr/lib/libcworthy.a
 	rm -vf /usr/include/cworthy.h
 	ldconfig
 	ldconfig
