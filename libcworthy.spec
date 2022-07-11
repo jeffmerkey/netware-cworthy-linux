@@ -4,7 +4,7 @@
 Summary:          Netware CWorthy Library for Linux
 License:          LGPL
 Name:             libcworthy
-Version:          1.13
+Version:          1.16
 Release:          1%{?dist}
 
 URL:              https://www.github.com/jeffmerkey/netware-cworthy-linux
@@ -29,16 +29,20 @@ The %{name} package contains the Netware CWorthy libraries for Linux.
 %{__mkdir_p} %{buildroot}%{_includedir}
 %{__mkdir_p} %{buildroot}/usr/lib
 %{__make} \
-	DESTDIR=%{buildroot} \
+	DESTDIR=%{buildroot} NOCHK=1\
 	install
 
 %pre
 
 %post
+/sbin/ldconfig
+/sbin/ldconfig
 
 %preun
 
 %postun
+/sbin/ldconfig
+/sbin/ldconfig
 
 %files
 %defattr(-,root,root)

@@ -16,6 +16,12 @@ U_CFLAGS_LIBP = -g -c -O3
 LD = ld
 AR = ar
 
+ifeq ($(NOCHK),1)
+LDCONFIG = 
+else
+LDCONFIG = ldconfig
+endif
+
 all : utilities
 
 libcworthy.so: cworthy.o netware-screensaver.o
@@ -46,15 +52,15 @@ install: utilities
 	install -m 0755 libcworthy.so $(DESTDIR)/usr/lib
 	install -m 644 libcworthy.a $(DESTDIR)/usr/lib
 	install -m 644 cworthy.h $(DESTDIR)/usr/include
-	ldconfig
-	ldconfig
+	$(LDCONFIG)
+	$(LDCONFIG)
 
 uninstall: 
 	rm -vf $(DESTDIR)/usr/bin/ifcon
 	rm -vf $(DESTDIR)/usr/lib/libcworthy.so
 	rm -vf $(DESTDIR)/usr/lib/libcworthy.a
 	rm -vf $(DESTDIR)/usr/include/cworthy.h
-	ldconfig
-	ldconfig
+	$(LDCONFIG)
+	$(LDCONFIG)
 
 

@@ -1588,7 +1588,7 @@ ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
 void *plog_routine(void *p)
 {
    int stderr_backup, pipefd[2];
-   unsigned char display_buffer[1024];
+   unsigned char display_buffer[4096];
    unsigned char buf[4096];
    register unsigned long i = 0;
 
