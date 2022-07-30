@@ -37,10 +37,10 @@ netware-screensaver.o: netware-screensaver.c $(INCLUDES)
 	$(U_CCP) $(U_CFLAGS_LIBP) -fPIC -Wall netware-screensaver.c 
 
 ifcon: ifcon.c libcworthy.so libcworthy.a $(INCLUDES)
-	$(U_CCP) $(U_CFLAGSP) ifcon.c -Wall -o ifcon -lncursesw -lpthread libcworthy.a
+	$(U_CCP) $(U_CFLAGSP) ifcon.c -Wall -o ifcon -lncursesw -lpthread libcworthy.a -ltinfo
 
 cw: cw.c libcworthy.so libcworthy.a $(INCLUDES)
-	$(U_CCP) $(U_CFLAGSP) cw.c -Wall -o cw -lncursesw -lpthread libcworthy.a
+	$(U_CCP) $(U_CFLAGSP) cw.c -Wall -o cw -lncursesw -lpthread libcworthy.a -ltinfo
 
 clean:
 	rm -rf *.o $(UTILFILES)
