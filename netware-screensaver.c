@@ -493,7 +493,7 @@ static void draw_worm(STATE *st, WORM *s)
 
 static unsigned long run_worms(STATE *st)
 {
-    register float range, increment;
+    float range, increment;
     int n;
 
     // reset columns and lines in case the screen was resized
@@ -553,7 +553,7 @@ static unsigned long run_worms(STATE *st)
 
 int cworthy_netware_screensaver(void)
 {
-    register int n, i;
+    int n, i;
     STATE state, *st = &state;
 
     memset(st, 0, sizeof(STATE));

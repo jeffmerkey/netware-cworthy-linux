@@ -117,7 +117,7 @@ int screen_x, screen_y;
 int snprintff(char *buf, int size, const char *fmt, ...)
 {
     va_list args;
-    register int err;
+    int err;
 
     va_start(args, fmt);
     err = vsprintf_s(buf, size, fmt, args);
@@ -556,8 +556,8 @@ ULONG init_cworthy(void)
 #endif
 
 #if (LINUX_UTIL)
-     register int i, pair;
-     register BYTE *tname;
+     int i, pair;
+     BYTE *tname;
      unsigned long w;
      FILE *f;
      char wait[100];
@@ -730,7 +730,7 @@ void copy_data(ULONG *src, ULONG *dest, ULONG len)
 {
     memcpy(dest, src, len);
 #if 0
-   register ULONG i;
+   ULONG i;
 
    for (i=0; i < ((len + 3) / 4); i++)
       *dest++ = *src++;
@@ -742,7 +742,7 @@ void set_data(ULONG *dest, ULONG value, ULONG len)
 {
    memset(dest, value, len);
 #if 0
-   register ULONG i;
+   ULONG i;
 
    for (i=0; i < ((len + 3) / 4); i++)
       *dest++ = value;
@@ -754,7 +754,7 @@ void set_data_b(BYTE *dest, BYTE value, ULONG len)
 {
    memset(dest, value, len);
 #if 0
-   register ULONG i;
+   ULONG i;
 
    for (i=0; i < len; i++)
       *dest++ = value;
@@ -786,7 +786,7 @@ int _kbhit(void)
 #if (LINUX_UTIL)
 ULONG set_screensaver_interval(ULONG seconds)
 {
-   register ULONG t = time_delay;
+   ULONG t = time_delay;
    time_delay = seconds;
    return t;
 }
@@ -919,8 +919,8 @@ void clear_screen(NWSCREEN *screen)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-   register ULONG fill;
-   register BYTE ch;
+   ULONG fill;
+   BYTE ch;
 
 
 #if LINUX_UTIL
@@ -953,8 +953,8 @@ void move_string(NWSCREEN *screen,
 		 ULONG destRow, ULONG destCol,
 		 ULONG length)
 {
-    register ULONG i;
-    register BYTE *src_v, *dest_v, c;
+    ULONG i;
+    BYTE *src_v, *dest_v, c;
     int attr = 0;
 
 #if LINUX_UTIL
@@ -1011,8 +1011,8 @@ void put_string(NWSCREEN *screen, const char *s, BYTE *attr_array,
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register BYTE *v, c;
-    register ULONG len = strlen((const char *)s), count;
+    BYTE *v, c;
+    ULONG len = strlen((const char *)s), count;
 
 #if LINUX_UTIL
    if (pthread_mutex_lock(&vidmem_mutex))
@@ -1070,8 +1070,8 @@ void put_string_transparent(NWSCREEN *screen, const char *s, BYTE *attr_array,
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register BYTE *v, c;
-    register ULONG len = strlen((const char *)s), count, color;
+    BYTE *v, c;
+    ULONG len = strlen((const char *)s), count, color;
 
 #if LINUX_UTIL
    if (pthread_mutex_lock(&vidmem_mutex))
@@ -1149,8 +1149,8 @@ void put_string_cleol(NWSCREEN *screen, const char *s, BYTE *attr_array,
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i;
-    register BYTE *v, c;
+    ULONG i;
+    BYTE *v, c;
 
 #if LINUX_UTIL
    if (pthread_mutex_lock(&vidmem_mutex))
@@ -1233,8 +1233,8 @@ void put_string_to_length(NWSCREEN *screen, const char *s, BYTE *attr_array,
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i, j;
-    register BYTE *v, c;
+    ULONG i, j;
+    BYTE *v, c;
 
 #if LINUX_UTIL
    if (pthread_mutex_lock(&vidmem_mutex))
@@ -1337,7 +1337,7 @@ void put_char(NWSCREEN *screen, int c, ULONG row, ULONG col, ULONG attr)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register BYTE *v;
+    BYTE *v;
 
     if (col >= screen->ncols)
        return;
@@ -1389,7 +1389,7 @@ int get_char(NWSCREEN *screen, ULONG row, ULONG col)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-   register BYTE *v;
+   BYTE *v;
 
 #if LINUX_UTIL
    if (pthread_mutex_lock(&vidmem_mutex))
@@ -1425,7 +1425,7 @@ int get_char_attribute(NWSCREEN *screen, ULONG row, ULONG col)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-   register BYTE *v;
+   BYTE *v;
 
 #if LINUX_UTIL
    if (pthread_mutex_lock(&vidmem_mutex))
@@ -1464,7 +1464,7 @@ void put_char_cleol(NWSCREEN *screen, int c, ULONG row, ULONG attr)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i;
+    ULONG i;
     for (i=0; i < screen->ncols; i++)
        put_char(screen, c, row, i, attr);
 
@@ -1491,7 +1491,7 @@ void put_char_length(NWSCREEN *screen, int c, ULONG row, ULONG col, ULONG attr,
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i;
+    ULONG i;
     for (i=0; i < len && (i + col) < screen->ncols; i++)
        put_char(screen, c, row, col + i, attr);
 #endif
@@ -1564,7 +1564,7 @@ ULONG scroll_display(NWSCREEN *screen, ULONG row, ULONG col,
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i, tCol, tRow;
+    ULONG i, tCol, tRow;
 
     if (!cols || !lines)
        return -1;
@@ -1701,7 +1701,7 @@ ULONG frame_get_xy(ULONG num, ULONG *row, ULONG *col)
 
 void scroll_menu(ULONG num, ULONG up)
 {
-    register ULONG row, col;
+    ULONG row, col;
 
     if (strlen((const char *)frame[num].header))
        row = frame[num].start_row + 3;
@@ -1721,8 +1721,8 @@ void scroll_menu(ULONG num, ULONG up)
 
 ULONG get_resp(ULONG num)
 {
-    register ULONG key, row, col, width, temp;
-    register ULONG i, ccode;
+    ULONG key, row, col, width, temp;
+    ULONG i, ccode;
 
     if (strlen((const char *)frame[num].header))
        row = frame[num].start_row + 3;
@@ -1914,7 +1914,7 @@ ULONG get_resp(ULONG num)
 #endif
 	     if (frame[num].warn_func)
 	     {
-		register ULONG retCode;
+		ULONG retCode;
 
 		retCode = (frame[num].warn_func)
 			(frame[num].screen, frame[num].choice);
@@ -2211,7 +2211,7 @@ ULONG get_resp(ULONG num)
 	  default:
 	     if (frame[num].key_handler)
 	     {
-		register ULONG retCode;
+		ULONG retCode;
 
 		retCode = (frame[num].key_handler)
 			(frame[num].screen, key, frame[num].choice);
@@ -2254,7 +2254,7 @@ ULONG fill_menu(ULONG num, ULONG ch, ULONG attr)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-   register ULONG i, j;
+   ULONG i, j;
 
    for (i=frame[num].start_column; i < frame[num].end_column + 1; i++)
    {
@@ -2303,7 +2303,7 @@ ULONG save_menu(ULONG num)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-   register ULONG i, j;
+   ULONG i, j;
    BYTE *buf_ptr;
    BYTE *v;
    BYTE *t;
@@ -2342,7 +2342,7 @@ ULONG restore_screen(void)
 
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i, j;
+    ULONG i, j;
     BYTE *buf_ptr;
     NWSCREEN *screen = &console_screen;
 
@@ -2405,7 +2405,7 @@ ULONG restore_menu(ULONG num)
 #endif
 
 #if (DOS_UTIL | LINUX_UTIL)
-    register ULONG i, j;
+    ULONG i, j;
     BYTE *buf_ptr;
 
     if (!frame[num].saved)
@@ -2466,7 +2466,7 @@ void free_elements(ULONG num)
 
 ULONG free_menu(ULONG num)
 {
-   register FIELD_LIST *fl;
+   FIELD_LIST *fl;
 
 #if LINUX_UTIL
    pthread_mutex_destroy(&frame[num].mutex);
@@ -2501,7 +2501,7 @@ ULONG free_menu(ULONG num)
 ULONG display_menu_header(ULONG num)
 {
 
-   register ULONG col, len, i;
+   ULONG col, len, i;
 
    if (!frame[num].header[0])
       return -1;
@@ -2549,7 +2549,7 @@ ULONG display_menu_header(ULONG num)
 
 ULONG draw_menu_border(ULONG num)
 {
-   register ULONG i;
+   ULONG i;
 
    for (i=frame[num].start_row + 1; i < frame[num].end_row; i++)
    {
@@ -2606,7 +2606,7 @@ ULONG draw_menu_border(ULONG num)
 
 void display_menu(ULONG num)
 {
-    register ULONG i, row, col, count, width;
+    ULONG i, row, col, count, width;
 
     if (strlen((const char *)frame[num].header))
        row = frame[num].start_row + 3;
@@ -2680,8 +2680,8 @@ void display_menu(ULONG num)
 
 ULONG add_item_to_menu(ULONG num, const char *p, ULONG value)
 {
-   register ULONG i;
-   register BYTE *v;
+   ULONG i;
+   BYTE *v;
 
     if (frame[num].owner && frame[num].el_strings &&
         frame[num].el_count < frame[num].el_limit)
@@ -2705,8 +2705,8 @@ ULONG add_item_to_menu(ULONG num, const char *p, ULONG value)
 ULONG activate_menu(ULONG num)
 {
 
-   register ULONG len;
-   register ULONG i, retCode;
+   ULONG len;
+   ULONG i, retCode;
 
    if (!frame[num].screen)
       return -1;
@@ -2809,8 +2809,8 @@ ULONG make_menu(NWSCREEN *screen,
 	       ULONG max_lines)
 {
 
-   register ULONG i;
-   register ULONG num;
+   ULONG i;
+   ULONG num;
 
    if ((max_lines == (ULONG) -1) || (!max_lines))
       max_lines = 100;
@@ -2888,14 +2888,14 @@ ULONG make_menu(NWSCREEN *screen,
 
    for (i=0; i < max_lines; i++)
    {
-      register BYTE *p = &frame[num].el_storage[i * screen->ncols];
+      BYTE *p = &frame[num].el_storage[i * screen->ncols];
       add_item_to_portal(num, frame[num].el_strings, p, i);
       p[screen->ncols - 1] = '\0';
    }
 
    for (i=0; i < max_lines; i++)
    {
-      register BYTE *p = &frame[num].el_attr_storage[i * screen->ncols];
+      BYTE *p = &frame[num].el_attr_storage[i * screen->ncols];
       add_item_to_portal(num, frame[num].el_attr, p, i);
       p[screen->ncols - 1] = '\0';
    }
@@ -3179,7 +3179,7 @@ ULONG menu_write_string(ULONG num, BYTE *p, ULONG row, ULONG col, ULONG attr)
 void scroll_portal(ULONG num, ULONG up)
 {
 
-    register ULONG row, col;
+    ULONG row, col;
 
     if (strlen((const char *)frame[num].header) ||
         strlen((const char *)frame[num].subheader))
@@ -3269,9 +3269,9 @@ int get_portal_focus(ULONG num)
 
 ULONG get_portal_resp(ULONG num)
 {
-    register ULONG key, row, col, width;
-    register ULONG i;
-    register ULONG retCode;
+    ULONG key, row, col, width;
+    ULONG i;
+    ULONG retCode;
 
 #if LINUX_UTIL
     if (pthread_mutex_lock(&frame[num].mutex))
@@ -4079,7 +4079,7 @@ ULONG get_portal_resp(ULONG num)
 #endif
 	     if (frame[num].key_handler)
 	     {
-		register ULONG retCode;
+		ULONG retCode;
 
 		retCode = (frame[num].key_handler)
 			(frame[num].screen, key, frame[num].choice);
@@ -4102,7 +4102,7 @@ UnlockMutex:;
 
 ULONG free_portal(ULONG num)
 {
-   register FIELD_LIST *fl;
+   FIELD_LIST *fl;
 
 #if (LINUX_UTIL)
    pthread_mutex_destroy(&frame[num].mutex);
@@ -4148,7 +4148,7 @@ ULONG add_item_to_portal(ULONG num, BYTE **list, BYTE *item, ULONG index)
 
 ULONG display_portal_header(ULONG num)
 {
-   register ULONG col, len, i, adjust;
+   ULONG col, len, i, adjust;
 
    if (!frame[num].header[0])
       return -1;
@@ -4210,7 +4210,7 @@ ULONG display_portal_header(ULONG num)
 
 ULONG draw_portal_border(ULONG num)
 {
-   register ULONG i;
+   ULONG i;
 
    for (i=frame[num].start_row + 1; i < frame[num].end_row; i++)
    {
@@ -4268,7 +4268,7 @@ ULONG draw_portal_border(ULONG num)
 
 ULONG activate_portal(ULONG num)
 {
-   register ULONG retCode;
+   ULONG retCode;
 
    get_xy(frame[num].screen, (ULONG *)&frame[num].pcur_row,
 	  (ULONG *)&frame[num].pcur_column);
@@ -4356,8 +4356,8 @@ ULONG make_portal(NWSCREEN *screen,
 		 ULONG scroll_barPresent)
 {
 
-   register ULONG i;
-   register ULONG num;
+   ULONG i;
+   ULONG num;
 
    for (num=1; num < MAX_MENU; num++)
    {
@@ -4432,14 +4432,14 @@ ULONG make_portal(NWSCREEN *screen,
 
    for (i=0; i < num_lines; i++)
    {
-      register BYTE *p = &frame[num].el_storage[i * screen->ncols];
+      BYTE *p = &frame[num].el_storage[i * screen->ncols];
       add_item_to_portal(num, frame[num].el_strings, p, i);
       p[screen->ncols - 1] = '\0';
    }
 
    for (i=0; i < num_lines; i++)
    {
-      register BYTE *p = &frame[num].el_attr_storage[i * screen->ncols];
+      BYTE *p = &frame[num].el_attr_storage[i * screen->ncols];
       add_item_to_portal(num, frame[num].el_attr, p, i);
       p[screen->ncols - 1] = '\0';
    }
@@ -4727,7 +4727,7 @@ ULONG set_portal_limit(ULONG num, ULONG limit)
 
 ULONG write_portal_header1(ULONG num, BYTE *p, ULONG attr)
 {
-   register ULONG col, len, i;
+   ULONG col, len, i;
 
    for (i=0; i < (HEADER_LEN - 1); i++)
    {
@@ -4760,7 +4760,7 @@ ULONG write_portal_header1(ULONG num, BYTE *p, ULONG attr)
 
 ULONG write_portal_subheader(ULONG num, BYTE *p, ULONG attr)
 {
-   register ULONG col, len, i;
+   ULONG col, len, i;
 
    for (i=0; i < (HEADER_LEN - 1); i++)
    {
@@ -4793,8 +4793,8 @@ ULONG write_portal_subheader(ULONG num, BYTE *p, ULONG attr)
 
 ULONG write_portal_line(ULONG num, ULONG row, ULONG attr)
 {
-   register ULONG i;
-   register BYTE *v, *a;
+   ULONG i;
+   BYTE *v, *a;
 
    if (!frame[num].owner)
       return -1;
@@ -4837,8 +4837,8 @@ ULONG write_portal_line(ULONG num, ULONG row, ULONG attr)
 ULONG write_portal(ULONG num, const char *p, ULONG row, ULONG col, ULONG attr)
 {
 
-   register ULONG i;
-   register BYTE *v, *a;
+   ULONG i;
+   BYTE *v, *a;
 
    if (!frame[num].owner)
       return -1;
@@ -4900,7 +4900,7 @@ ULONG write_portal(ULONG num, const char *p, ULONG row, ULONG col, ULONG attr)
 
 ULONG write_portal_char(ULONG num, BYTE p, ULONG row, ULONG col, ULONG attr)
 {
-   register BYTE *v, *a;
+   BYTE *v, *a;
 
    if (!frame[num].owner)
       return -1;
@@ -4946,8 +4946,8 @@ ULONG write_portal_cleol(ULONG num, const char *p, ULONG row, ULONG col,
 			 ULONG attr)
 {
 
-   register ULONG i;
-   register BYTE *v, *a;
+   ULONG i;
+   BYTE *v, *a;
 
    if (!frame[num].owner)
       return -1;
@@ -5015,7 +5015,7 @@ ULONG write_screen_comment_line(NWSCREEN *screen, const char *p, ULONG attr)
 
 void display_portal(ULONG num)
 {
-    register ULONG i, row, col, count, width;
+    ULONG i, row, col, count, width;
 
     if (!frame[num].choice)
     {
@@ -5107,7 +5107,7 @@ void display_portal(ULONG num)
 ULONG update_portal(ULONG num)
 {
 
-    register ULONG i, row, col, width;
+    ULONG i, row, col, width;
 
 #if (LINUX_UTIL)
     if (screensaver)
@@ -5239,7 +5239,7 @@ ULONG update_portal(ULONG num)
 ULONG update_static_portal(ULONG num)
 {
 
-    register ULONG i, row, col, width;
+    ULONG i, row, col, width;
 
 #if (LINUX_UTIL)
     if (screensaver)
@@ -5369,8 +5369,8 @@ ULONG update_static_portal(ULONG num)
 
 ULONG clear_portal_storage(ULONG num)
 {
-   register ULONG i, j;
-   register BYTE *v, *a;
+   ULONG i, j;
+   BYTE *v, *a;
 
    if (!frame[num].owner)
       return -1;
@@ -5418,8 +5418,8 @@ ULONG clear_portal_storage(ULONG num)
 
 ULONG clear_portal(ULONG num)
 {
-   register ULONG i, j;
-   register BYTE *v, *a;
+   ULONG i, j;
+   BYTE *v, *a;
 
    if (!frame[num].owner)
       return -1;
@@ -5475,22 +5475,22 @@ ULONG clear_portal(ULONG num)
 
 ULONG disable_portal_input(ULONG num)
 {
-   register ULONG retCode = frame[num].key_mask;
+   ULONG retCode = frame[num].key_mask;
    frame[num].key_mask = TRUE;
    return retCode;
 }
 
 ULONG enable_portal_input(ULONG num)
 {
-   register ULONG retCode = frame[num].key_mask;
+   ULONG retCode = frame[num].key_mask;
    frame[num].key_mask = 0;
    return retCode;
 }
 
 ULONG error_portal(const char *p, ULONG row)
 {
-    register ULONG portal;
-    register ULONG len, startCol, endCol;
+    ULONG portal;
+    ULONG len, startCol, endCol;
 
     len = strlen((const char *)p);
     if (!console_screen.ncols || (console_screen.ncols < len))
@@ -5535,8 +5535,8 @@ ULONG error_portal(const char *p, ULONG row)
 
 ULONG message_portal(const char *p, ULONG row, ULONG attr, ULONG wait)
 {
-    register ULONG portal;
-    register ULONG len, startCol, endCol;
+    ULONG portal;
+    ULONG len, startCol, endCol;
 
     len = strlen((const char *)p);
     if (!console_screen.ncols || (console_screen.ncols < len))
@@ -5582,8 +5582,8 @@ ULONG message_portal(const char *p, ULONG row, ULONG attr, ULONG wait)
 
 ULONG create_message_portal(const char *p, ULONG row, ULONG attr)
 {
-    register ULONG portal;
-    register ULONG len, startCol, endCol;
+    ULONG portal;
+    ULONG len, startCol, endCol;
 
     len = strlen((const char *)p);
     if (!console_screen.ncols || (console_screen.ncols < len))
@@ -5634,7 +5634,7 @@ ULONG close_message_portal(ULONG portal)
 
 ULONG confirm_menu(const char *confirm, ULONG row, ULONG attr)
 {
-    register ULONG mNum, retCode, len, startCol;
+    ULONG mNum, retCode, len, startCol;
 
     len = strlen((const char *)confirm);
     if (!console_screen.ncols || (console_screen.ncols < len))
@@ -5738,7 +5738,7 @@ FIELD_LIST *insert_field(ULONG num, FIELD_LIST *i, FIELD_LIST *top)
 
 int add_field_node(ULONG num, FIELD_LIST *new_fl)
 {
-    register FIELD_LIST *fl;
+    FIELD_LIST *fl;
 
     // check if the node was already added
     // return 1 if already exists
@@ -5762,8 +5762,8 @@ ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
 			ULONG flags, int (*hide)(ULONG, FIELD_LIST *),
                         void *priv)
 {
-    register int ret;
-    register FIELD_LIST *fl;
+    int ret;
+    FIELD_LIST *fl;
 
     if (!frame[num].owner)
        return -1;
@@ -5810,11 +5810,11 @@ ULONG add_field_to_portal(ULONG num, ULONG row, ULONG col, ULONG attr,
 
 ULONG input_portal_fields(ULONG num)
 {
-   register ULONG ccode, i, temp;
+   ULONG ccode, i, temp;
    ULONG row, col;
-   register ULONG key, menuRow, len, screenRow, menuCol, adj;
-   register FIELD_LIST *fl, *fl_search;
-   register BYTE *p;
+   ULONG key, menuRow, len, screenRow, menuCol, adj;
+   FIELD_LIST *fl, *fl_search;
+   BYTE *p;
 
    if (!frame[num].owner)
       return -1;

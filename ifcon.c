@@ -240,7 +240,7 @@ ARPTYPE arptype[]={
    776, "IPv6-in-IPv4",
    777, "IP over DDP Tunnel",
    778, "GRE over IP",
-   779, "PIMSM register Interface",
+   779, "PIMSM Interface",
    780, "High Performance Parallel Interface",
    781, "Nexus 64Mbps Ash",
    782, "Acorn Econet",
@@ -271,7 +271,7 @@ ARPTYPE arptype[]={
 
 const char *get_arp_type(int type)
 {
-   register unsigned int i;
+   unsigned int i;
 
    for (i=0; i < (sizeof(arptype) / (sizeof(const char *) + sizeof(int)));
         i++)
@@ -372,7 +372,7 @@ unsigned int clip(int c) { return (c & 0xFF); }
 
 ULONG warn_func(NWSCREEN *screen, ULONG index)
 {
-    register ULONG mNum, retCode;
+    ULONG mNum, retCode;
 
     mask_portal(mainportal);
 
@@ -409,9 +409,9 @@ ULONG warn_func(NWSCREEN *screen, ULONG index)
 
 char *comma_snprintf(char *buffer, int size, const char *format, ...)
 {
-    register unsigned int len, i;
+    unsigned int len, i;
     char buf[1024], *src, *dest;
-    register size_t vsize = size > (1024 - 1)
+    size_t vsize = size > (1024 - 1)
 	           ? 1024 - 1 : size;
     va_list ap;
 
@@ -1590,7 +1590,7 @@ void *plog_routine(void *p)
    int stderr_backup, pipefd[2];
    unsigned char display_buffer[4096];
    unsigned char buf[4096];
-   register unsigned long i = 0;
+   unsigned long i = 0;
 
    if (pipe(pipefd) == -1)
    {
@@ -1717,10 +1717,10 @@ ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
 
 int main(int argc, char *argv[])
 {
-    register int i;
-    register ULONG retCode = 0, ssi;
+    int i;
+    ULONG retCode = 0, ssi;
     BYTE display_buffer[1024];
-    register int plines, mlines, mlen = 0;
+    int plines, mlines, mlen = 0;
     struct utsname utsbuf;
 
     for (i=0; i < argc; i++)

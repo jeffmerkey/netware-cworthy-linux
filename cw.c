@@ -13,7 +13,7 @@ ULONG mainportal;
 
 ULONG warn_func(NWSCREEN *screen, ULONG index)
 {
-    register ULONG mNum, retCode;
+    ULONG mNum, retCode;
 
     mask_portal(mainportal);
 
@@ -160,9 +160,9 @@ ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
 
 int main(int argc, char *argv[])
 {
-    register int i, retCode = 0;
+    int i, retCode = 0;
     BYTE displaybuffer[256];
-    register int plines, mlines, mlen, menu = 0;
+    int plines, mlines, mlen, menu = 0;
 
     for (i=0; i < argc; i++)
     {
