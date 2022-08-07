@@ -15,11 +15,25 @@ U_CFLAGSP = -g -O3
 U_CFLAGS_LIBP = -g -c -O3 
 LD = ld
 AR = ar
+LDCONFIG = ldconfig
+LIBS = /usr/lib
+INCS = /usr/include
+BIN = /usr/bin
+
+ifdef LIBDIR
+LIBS = $(LIBDIR)
+endif
+
+ifdef INCDIR
+INCS = $(INCDIR)
+endif
+
+ifdef BINDIR
+BIN = $(BINDIR)
+endif
 
 ifeq ($(NOCHK),1)
 LDCONFIG = 
-else
-LDCONFIG = ldconfig
 endif
 
 all : utilities
@@ -48,18 +62,18 @@ clean:
 utilities: $(UTILFILES)
 
 install: utilities
-	install -m 0755 ifcon $(DESTDIR)/usr/bin
-	install -m 0755 libcworthy.so $(DESTDIR)/usr/lib
-	install -m 644 libcworthy.a $(DESTDIR)/usr/lib
-	install -m 644 cworthy.h $(DESTDIR)/usr/include
+	install -m 0755 ifcon $(DESTDIR)$(BIN)
+	install -m 0755 libcworthy.so $(DESTDIR)$(LIBS)
+	install -m 644 libcworthy.a $(DESTDIR)$(LIBS)
+	install -m 644 cworthy.h $(DESTDIR)$(INCS)
 	$(LDCONFIG)
 	$(LDCONFIG)
 
 uninstall: 
-	rm -vf $(DESTDIR)/usr/bin/ifcon
-	rm -vf $(DESTDIR)/usr/lib/libcworthy.so
-	rm -vf $(DESTDIR)/usr/lib/libcworthy.a
-	rm -vf $(DESTDIR)/usr/include/cworthy.h
+	rm -vf $(DESTDIR)$(BIN)/ifcon
+	rm -vf $(DESTDIR)$(LIBS)/libcworthy.so
+	rm -vf $(DESTDIR)$(LIBS)/libcworthy.a
+	rm -vf $(DESTDIR)$(INCS)/cworthy.h
 	$(LDCONFIG)
 	$(LDCONFIG)
 

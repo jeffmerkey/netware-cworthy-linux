@@ -27,28 +27,29 @@ The %{name} package contains the Netware CWorthy libraries for Linux.
 %{__mkdir_p} %{buildroot}%{_sbindir}
 %{__mkdir_p} %{buildroot}%{_bindir}
 %{__mkdir_p} %{buildroot}%{_includedir}
-%{__mkdir_p} %{buildroot}/usr/lib
+%{__mkdir_p} %{buildroot}%{_libdir}
 %{__make} \
-	DESTDIR=%{buildroot} NOCHK=1\
+	DESTDIR=%{buildroot} NOCHK=1 LIBDIR=%{_libdir} \
+	INCDIR=%{_includedir} BINDIR=%{_bindir} \
 	install
 
 %pre
 
 %post
-/sbin/ldconfig
-/sbin/ldconfig
+%{_sbindir}/ldconfig
+%{_sbindir}/ldconfig
 
 %preun
 
 %postun
-/sbin/ldconfig
-/sbin/ldconfig
+%{_sbindir}/ldconfig
+%{_sbindir}/ldconfig
 
 %files
 %defattr(-,root,root)
 %{_bindir}/ifcon
 %{_includedir}/cworthy.h
-/usr/lib/libcworthy.a
-/usr/lib/libcworthy.so
+%{_libdir}/libcworthy.a
+%{_libdir}/libcworthy.so
 
 %changelog
