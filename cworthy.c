@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-*   Copyright(c) Jeff V. Merkey 1997-2019.  All rights reserved.
+*   Copyright(c) Jeff V. Merkey 1997-2022.  All rights reserved.
 *   Open CWorthy Look Alike Terminal Library.
 *
 *   Licensed under the Lesser GNU Public License (LGPL) v2.1.
@@ -2321,7 +2321,7 @@ ULONG save_menu(ULONG num)
 	 t = (v + (j * frame[num].screen->ncols * 2) + i * 2);
 	 *buf_ptr++ = *t++;
 	 *buf_ptr++ = *t;
-	 *(t - 1) = ' ';  // fill window
+//	 *(t - 1) = ' ';  // fill window
       }
    }
    frame[num].saved = 1;
@@ -4991,8 +4991,10 @@ ULONG write_portal_cleol(ULONG num, const char *p, ULONG row, ULONG col,
 	    v[i] = *p++;
 	    a[i] = (BYTE)(attr & 0xFF);
 	 }
-	 else if (i >= col)
+	 else if (i >= col) {
 	    v[i] = ' ';
+	    a[i] = (BYTE)(attr & 0xFF);
+         }
       }
       frame[num].el_strings[row][frame[num].screen->ncols - 1] = '\0';
       if ((row + 1) > frame[num].el_limit)
@@ -6720,4 +6722,24 @@ ULONG input_portal_fields(ULONG num)
    return 0;
 
 }
+
+/*
+struct winsize sz;
+
+void redraw( int signum ){
+        printf( "\e[2J" );
+        ioctl( 0, TIOCGWINSZ, &sz );
+        int limit = sz.ws_row * sz.ws_col;
+        for( int i = 0; i < limit; i++ ){
+                putchar( '+' );
+        }
+}
+
+int main( int argc, char **argv ){
+        signal( SIGWINCH, redraw );
+        redraw();
+        // rest of the program 
+        return 0;
+}
+*/
 
