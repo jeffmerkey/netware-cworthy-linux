@@ -1023,13 +1023,15 @@ void put_string(NWSCREEN *screen, const char *s, BYTE *attr_array,
     v += (row * (screen->ncols * 2)) + col * 2;
     while (*s)
     {
-       if (count++ >
+       if (count + 1 >
           ((len <= (screen->ncols - col)) ? len : (screen->ncols - col)))
 	  break;
 
        c = *s;
        *v++ = *s++;
-       *v++ = attr;
+       //*v++ = attr;
+       *v++ = (attr_array && attr_array[count]) ? attr_array[count] : attr;
+       count++;
 
 #if (LINUX_UTIL)
        set_color(attr);
@@ -1082,15 +1084,18 @@ void put_string_transparent(NWSCREEN *screen, const char *s, BYTE *attr_array,
     v += (row * (screen->ncols * 2)) + col * 2;
     while (*s)
     {
-       if (count++ >
+       if (count + 1 >
 	  ((len <= (screen->ncols - col)) ? len : (screen->ncols - col)))
 	  break;
 
        c = *s;
        *v++ = *s++;
-       if (attr)
-	  *v |= attr;
+       if (attr || (attr_array && attr_array[count])) {
+	  //*v |= attr;
+          *v = (attr_array && attr_array[count]) ? attr_array[count] : attr;
+       }
        color = *v++;
+       count++;
 
 #if (LINUX_UTIL)
        set_color(color);
@@ -1164,13 +1169,15 @@ void put_string_cleol(NWSCREEN *screen, const char *s, BYTE *attr_array,
        {
           c = ' ';
 	  *v++ = ' ';
-	  *v++ = attr;
+	  *v++ = (attr_array && attr_array[i] && attr != bar_attribute)
+		 ? attr_array[i] : attr;
        }
        else
        {
 	  c = *s;
 	  *v++ = *s++;
-	  *v++ = attr;
+	  *v++ = (attr_array && attr_array[i] && attr != bar_attribute)
+		 ? attr_array[i] : attr;
        }
 #if (LINUX_UTIL)
        set_color(attr_array && attr_array[i] && attr != bar_attribute
@@ -1248,13 +1255,15 @@ void put_string_to_length(NWSCREEN *screen, const char *s, BYTE *attr_array,
        {
 	  c = ' ';
 	  *v++ = ' ';
-	  *v++ = attr;
+	  *v++ = (attr_array && attr_array[i] && attr != bar_attribute)
+		 ? attr_array[i] : attr;
        }
        else
        {
 	  c = *s;
 	  *v++ = *s++;
-	  *v++ = attr;
+	  *v++ = (attr_array && attr_array[i] && attr != bar_attribute)
+		 ? attr_array[i] : attr;
        }
 #if (LINUX_UTIL)
        set_color(attr_array && attr_array[i] && attr != bar_attribute
@@ -1882,9 +1891,6 @@ ULONG get_resp(ULONG num)
              break;
 #endif
 
-          case ' ':
-             break;
-
 	  case ENTER:
 	     if (frame[num].el_func)
 	     {
@@ -1908,6 +1914,8 @@ ULONG get_resp(ULONG num)
 	     break;
 
 #if (LINUX_UTIL)
+	  case 'Q':
+          case 'q':
 	  case F3:
 #else
 	  case ESC:
@@ -2184,6 +2192,7 @@ ULONG get_resp(ULONG num)
 
 	     break;
 
+          case ' ':
 	  case DOWN_ARROW:
 	     frame[num].choice++;
 	     frame[num].index++;
@@ -3477,12 +3486,10 @@ ULONG get_portal_resp(ULONG num)
           case 0:
              break;
 #endif
-          // repaint screen
-          case ' ':
-             restore_screen();
-             break;
 
 #if (LINUX_UTIL)
+          case 'Q':
+          case 'q':
 	  case F3:
 #else
 	  case ESC:
@@ -4027,6 +4034,7 @@ ULONG get_portal_resp(ULONG num)
 
 	     break;
 
+          case ' ':
 	  case DOWN_ARROW:
 	     if (frame[num].choice >= (long)frame[num].el_limit)
 		break;
