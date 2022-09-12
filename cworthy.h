@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-*   Copyright(c) Jeff V. Merkey 1997-2019.  All rights reserved.
+*   Copyright(c) Jeff V. Merkey 1997-2022.  All rights reserved.
 *   Open CWorthy Look Alike Terminal Library.
 *
 *   For those folks who liked the Novell NetWare Network Administration
@@ -366,7 +366,7 @@ typedef struct _CWFRAME
    long top;
    long bottom;
    ULONG selected;
-   ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG);
+   ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG, ULONG);
    ULONG key_mask;
    ULONG screen_mode;
    ULONG nlines;
@@ -499,7 +499,7 @@ ULONG make_menu(NWSCREEN *screen,
 	       ULONG tcolor,
 	       ULONG (*el_func)(NWSCREEN *, ULONG, BYTE *, ULONG),
 	       ULONG (*warn_func)(NWSCREEN *, ULONG),
-	       ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG),
+	       ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG, ULONG),
 	       ULONG scroll_barPresent,
 	       ULONG maxlines);
 ULONG menu_write_string(ULONG num, BYTE *p, ULONG row, ULONG col, ULONG attr);
@@ -536,7 +536,7 @@ ULONG make_portal(NWSCREEN *screen,
 		 ULONG tcolor,
 		 ULONG (*lineFunction)(NWSCREEN *, ULONG, BYTE *, ULONG),
 		 ULONG (*warn_func)(NWSCREEN *, ULONG),
-		 ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG),
+		 ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG, ULONG),
 		 ULONG scroll_barPresent);
 ULONG set_portal_limit(ULONG num, ULONG limit);
 ULONG write_portal(ULONG num, const char *p, ULONG row, ULONG col, ULONG attr);

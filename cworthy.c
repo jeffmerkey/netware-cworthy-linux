@@ -2170,6 +2170,7 @@ ULONG get_resp(ULONG num)
              }
 	     break;
 
+	  case BKSP:
 	  case UP_ARROW:
 	     frame[num].choice--;
 	     frame[num].index--;
@@ -2223,7 +2224,7 @@ ULONG get_resp(ULONG num)
 		ULONG retCode;
 
 		retCode = (frame[num].key_handler)
-			(frame[num].screen, key, frame[num].choice);
+			(frame[num].screen, key, frame[num].choice, num);
 		if (retCode)
 		   return (retCode);
 	     }
@@ -2813,7 +2814,7 @@ ULONG make_menu(NWSCREEN *screen,
 	       ULONG tcolor,
 	       ULONG (*el_func)(NWSCREEN *, ULONG, BYTE *, ULONG),
 	       ULONG (*warn_func)(NWSCREEN *, ULONG),
-	       ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG),
+	       ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG, ULONG),
 	       ULONG scroll_barPresent,
 	       ULONG max_lines)
 {
@@ -4012,6 +4013,7 @@ ULONG get_portal_resp(ULONG num)
              frame[num].selected = 1;
              break;
 
+	  case BKSP:
 	  case UP_ARROW:
 	     frame[num].choice--;
 	     frame[num].index--;
@@ -4090,7 +4092,7 @@ ULONG get_portal_resp(ULONG num)
 		ULONG retCode;
 
 		retCode = (frame[num].key_handler)
-			(frame[num].screen, key, frame[num].choice);
+			(frame[num].screen, key, frame[num].choice, num);
 		if (retCode)
                    goto UnlockMutex;
 	     }
@@ -4360,7 +4362,7 @@ ULONG make_portal(NWSCREEN *screen,
 		 ULONG tcolor,
 		 ULONG (*lineFunction)(NWSCREEN *, ULONG, BYTE *, ULONG),
 		 ULONG (*warn_func)(NWSCREEN *, ULONG),
-		 ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG),
+		 ULONG (*key_handler)(NWSCREEN *, ULONG, ULONG, ULONG),
 		 ULONG scroll_barPresent)
 {
 

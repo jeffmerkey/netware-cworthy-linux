@@ -120,7 +120,7 @@ ULONG menuFunction(NWSCREEN *screen, ULONG value, BYTE *option,
 
 }
 
-ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
+ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index, ULONG portal)
 {
     BYTE displaybuffer[256];
 

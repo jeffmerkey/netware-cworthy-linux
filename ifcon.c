@@ -1315,7 +1315,7 @@ void *pstat_routine(void *p)
    return NULL;
 }
 
-ULONG netmenuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
+ULONG netmenuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index, ULONG portal)
 {
     BYTE display_buffer[1024];
 
@@ -1671,7 +1671,7 @@ void *plog_routine(void *p)
    return NULL;
 }
 
-ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index)
+ULONG menuKeyboardHandler(NWSCREEN *screen, ULONG key, ULONG index, ULONG portal)
 {
     BYTE display_buffer[1024];
 
