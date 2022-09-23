@@ -598,7 +598,7 @@ static unsigned long run_worms(STATE *st)
 
 int cworthy_netware_screensaver(void)
 {
-    int n, i;
+    int n, i, prio = 0;
     STATE state, *st = &state;
 
     memset(st, 0, sizeof(STATE));
@@ -607,6 +607,7 @@ int cworthy_netware_screensaver(void)
        exit(1);
 
     // set nice value to highest priority
+    prio = getpriority(PRIO_PROCESS, 0);
     setpriority(PRIO_PROCESS, 0, -20);
 
     if (st->cpus > MAX_WORMS)
@@ -676,6 +677,7 @@ int cworthy_netware_screensaver(void)
     if (st->worms)
        free(st->worms);
 
+    setpriority(PRIO_PROCESS, 0, prio);
     return 0;
 }
 
