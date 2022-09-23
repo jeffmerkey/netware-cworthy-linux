@@ -606,7 +606,7 @@ int cworthy_netware_screensaver(void)
     if (!st->cpus)
        exit(1);
 
-    // set nice value to hishest priority
+    // set nice value to highest priority
     setpriority(PRIO_PROCESS, 0, -20);
 
     if (st->cpus > MAX_WORMS)
